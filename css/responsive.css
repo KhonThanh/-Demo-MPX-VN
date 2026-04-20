@@ -2,9 +2,13 @@
 
 @media screen and (min-width: 1200px) {}
 
-@media screen and (max-width: 1200px) {}
+@media screen and (max-width: 1200px) {} */
 
-@media screen and (max-width: 1073px) {} */
+@media screen and (max-width: 1073px) {
+    .menu-container__bar{
+        display: flex;
+    }
+}
 
 @media screen and (max-width: 900px) {
     .header-top .menu-container__item {

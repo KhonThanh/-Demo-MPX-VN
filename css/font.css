@@ -1,89 +1,53 @@
 @font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-Bold.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-ExtraLight.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-Light.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-Medium.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-Regular.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-SemiBold.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Oswald';
-  src: url('../../font/Oswald-VariableFont_wght.ttf') format('woff2'),
-       local('Oswald');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: local('Inter'), local('Inter-SemiBold'),
-       url('../../font/Inter_18pt-SemiBold.ttf') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: local('Inter'), local('Inter-Italic'),
-       url('../../font/Inter_18pt-Italic.ttf') format('woff2');
+  font-family: 'Roboto';
+  src: local('Roboto Regular'), local('Roboto-Regular'),
+       url('../../font/Roboto-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: local('Inter'), local('Inter-Regular'),
-       url('../../font/Inter_18pt-Regular.ttf') format('woff2');
+  font-family: 'Roboto';
+  src: local('Roboto Italic'), local('Roboto-Italic'),
+       url('../../font/Roboto-Italic.ttf') format('truetype');
   font-weight: 400;
-  font-style: normal;
+  font-style: italic;
   font-display: swap;
 }
+
 @font-face {
-  font-family: 'Oooh Baby';
-  src: url('../../font/OoohBaby-Regular.ttf') format('woff2');
-  font-weight: 400;
+  font-family: 'Roboto';
+  src: local('Roboto Medium'), local('Roboto-Medium'),
+       url('../../font/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Roboto';
+  src: local('Roboto SemiBold'), local('Roboto-SemiBold'),
+       url('../../font/Roboto-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: local('Roboto Bold'), local('Roboto-Bold'),
+       url('../../font/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: local('Roboto Light'), local('Roboto-Light'),
+       url('../../font/Roboto-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}

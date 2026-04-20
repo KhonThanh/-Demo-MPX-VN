@@ -1,11 +1,10 @@
 :root {
-  --primary-color: #005C35;
-  --secondary-color: #00844C;
-  --third-color: #00B266;
+  --primary-color: #F36523;
   --white-color: #ffffff;
-  --second-white-color: #F4FBF4;
-  --black-color: #333333;
+  --second-white-color: #F8F8F8;
+  --black-color: #000000;
   --gray-color: #D9D9D9;
+  --deactive-color: #64748B;
   --error-color: #CB241C;
   --header-h: 64px;
   --footer-h: 80px;
@@ -88,6 +87,7 @@ a {
   text-decoration: none;
   color: var(--black-color);
   cursor: pointer;
+  font-size: calc(var(--font-size-base) - 2px);
 }
 
 p {
