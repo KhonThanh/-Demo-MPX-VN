@@ -517,14 +517,17 @@ function initFormValidation(root = document) {
 // ----------- Vùng gọi biến --------------
 document.addEventListener("DOMContentLoaded", () => {
   includeHTML(() => {
-    // 🟢 Slide banner chính (chuyển sang Swiper)
     initSwiperSlider({
       mainSelector: '.slide-container',
-      minSlides: 3, // Đảm bảo có ít nhất 3 slide để loop mượt mà
-      autoplay: { delay: 3000, disableOnInteraction: false }, // Tự động chạy sau 3 giây
-      loop: true, // Bật vòng lặp vô hạn
-      slidesPerView: 1, // Hiển thị 1 slide
-      spaceBetween: 0, // Không có khoảng cách
+      minSlides: 3,
+      autoplay: { delay: 3000, disableOnInteraction: false },
+      loop: true,
+      slidesPerView: 1,
+      spaceBetween: 0,
+      navigation: {
+        nextEl: '.slide-container .swiper-button-next',
+        prevEl: '.slide-container .swiper-button-prev',
+      },
       pagination: {
         el: '.swiper-pagination.custom-dots', // Selector cho dots
         clickable: true,
@@ -532,12 +535,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     initSwiperSlider({
-      mainSelector: '.service-list',
+      mainSelector: '.project-swiper',
       minSlides: 8,
-      autoplay: { delay: 4000, disableOnInteraction: false },
+      autoplay: { delay: 3000, disableOnInteraction: false },
       loop: true,
+      slidesPerView: 1,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.project-swiper .swiper-button-next',
+        prevEl: '.project-swiper .swiper-button-prev',
+      },
+      pagination: {
+        el: '.custom-dots',
+        clickable: true,
+      },
+      breakpoints: {
+        1200: { slidesPerView: 4, spaceBetween: 20, },
+        900: { slidesPerView: 3, spaceBetween: 20, },
+        500: { slidesPerView: 2, spaceBetween: 20, },
+      },
+    });
+
+    initSwiperSlider({
+      mainSelector: '.service-list',
+      minSlides: 0,
+      loop: false,
       slidesPerView: 1, // Mặc định cho mobile
       spaceBetween: 20,
+      grid: {
+        rows: 1,
+        fill: 'row'
+      },
       navigation: {
         nextEl: '.service-list .swiper-button-next',
         prevEl: '.service-list .swiper-button-prev',
@@ -547,31 +575,70 @@ document.addEventListener("DOMContentLoaded", () => {
         clickable: true,
       },
       breakpoints: {
-        500: { slidesPerView: 2, spaceBetween: 20 },
-        768: { slidesPerView: 3, spaceBetween: 20 },
-        1200: { slidesPerView: 4, spaceBetween: 20 },
+        1200: {
+          slidesPerView: 3, spaceBetween: 20,
+          grid: {
+            rows: 2,
+            fill: 'row'
+          },
+        },
+        1000: {
+          slidesPerView: 3, spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
+        500: {
+          slidesPerView: 2, spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
       },
     });
-
     initSwiperSlider({
-      mainSelector: '.news-list',
-      minSlides: 8,
-      autoplay: { delay: 4000, disableOnInteraction: false },
+      mainSelector: '.logo-brand__swiper',
+      minSlides: 30,
+      autoplay: { delay: 3000, disableOnInteraction: false },
       loop: true,
-      slidesPerView: 1, // Mặc định cho mobile
+      slidesPerView: 1,
       spaceBetween: 20,
+       grid: {
+            rows: 2,
+            fill: 'row'
+          },
       navigation: {
-        nextEl: '.news-list .swiper-button-next',
-        prevEl: '.news-list .swiper-button-prev',
+        nextEl: '.logo-brand__swiper .swiper-button-next',
+        prevEl: '.logo-brand__swiper .swiper-button-prev',
       },
       pagination: {
-        el: '.news-list .swiper-pagination',
+        el: '.logo-brand__swiper .swiper-pagination',
         clickable: true,
       },
       breakpoints: {
-        500: { slidesPerView: 2, spaceBetween: 20 },
-        768: { slidesPerView: 3, spaceBetween: 20 },
-        1200: { slidesPerView: 3, spaceBetween: 20 },
+        1200: {
+          slidesPerView: 5, 
+          grid: {
+            rows: 3,
+            fill: 'row'
+          },
+        },
+        900: {
+          slidesPerView: 4, 
+          grid: {
+            rows: 2,
+            fill: 'row'
+          },
+        },
+        500: {
+          slidesPerView: 2, 
+           grid: {
+            rows: 2,
+            fill: 'row'
+          },
+        },
       },
     });
 
@@ -588,11 +655,11 @@ document.addEventListener("DOMContentLoaded", () => {
         activeClass: "active",
         closeOnOutside: true,
         closeOnEsc: true,
-        innerSelector: ".m-menu__link" // Đảm bảo click bên trong menu không bị đóng
+        innerSelector: ".m-menu__link" 
       },
       {
         trigger: ".news-detail__content h3",
-        behavior: "activate", // 'activate' tự động xử lý việc chỉ có 1 item active
+        behavior: "activate", 
         activeClass: "active",
       },
     ]);
