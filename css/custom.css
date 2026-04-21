@@ -502,6 +502,8 @@
 }
 
 /* Swiper navigation buttons for service-list */
+.guest-comment__swiper .swiper-button-next,
+.guest-comment__swiper .swiper-button-prev,
 .logo-brand__swiper .swiper-button-next,
 .logo-brand__swiper .swiper-button-prev,
 .project-swiper .swiper-button-next,
@@ -527,6 +529,8 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
+.guest-comment__swiper .swiper-button-next::after,
+.guest-comment__swiper .swiper-button-prev::after,
 .logo-brand__swiper .swiper-button-next::after,
 .logo-brand__swiper .swiper-button-prev::after,
 .project-swiper .swiper-button-next::after,
@@ -540,6 +544,8 @@
     /* Swiper uses 'swiper-icons' font for default arrows */
 }
 
+.guest-comment__swiper .swiper-button-next:hover,
+.guest-comment__swiper .swiper-button-prev:hover,
 .logo-brand__swiper .swiper-button-next::hover,
 .logo-brand__swiper .swiper-button-prev::hover,
 .project-swiper .swiper-button-next:hover,
@@ -977,4 +983,8 @@
 
 .project-btn{
     width:fit-content;
+}
+
+.guest-comment__title .title-border-bottom{
+    max-width: 350px;
 }

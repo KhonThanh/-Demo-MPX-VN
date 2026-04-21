@@ -556,6 +556,28 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
 
+     initSwiperSlider({
+      mainSelector: '.guest-comment__swiper',
+      minSlides: 8,
+      // autoplay: { delay: 3000, disableOnInteraction: false },
+      loop: true,
+      slidesPerView: 1,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.guest-comment__swiper .swiper-button-next',
+        prevEl: '.guest-comment__swiper .swiper-button-prev',
+      },
+      pagination: {
+        el: '.custom-dots',
+        clickable: true,
+      },
+      breakpoints: {
+        1200: { slidesPerView: 3, spaceBetween: 20, },
+        900: { slidesPerView: 3, spaceBetween: 20, },
+        500: { slidesPerView: 2, spaceBetween: 20, },
+      },
+    });
+
     initSwiperSlider({
       mainSelector: '.service-list',
       minSlides: 0,
