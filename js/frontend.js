@@ -514,6 +514,49 @@ function initFormValidation(root = document) {
   });
 }
 
+// js add active định vị ở menu
+function initUniversalActiveMenu(menuSelector = '', activeClassName = 'active') {
+  const currentUrl = window.location.href.split(/[?#]/)[0];
+
+  const menuLinks = document.querySelectorAll(`${menuSelector} a`);
+  let bestMatch = null;
+  let longestMatchLength = 0;
+
+  menuLinks.forEach(link => {
+    const hrefAttr = link.getAttribute('href');
+    if (!hrefAttr || hrefAttr.startsWith('#') || hrefAttr.startsWith('javascript')) return;
+    const linkUrl = link.href.split(/[?#]/)[0];
+    if (currentUrl === linkUrl) {
+      bestMatch = link;
+      longestMatchLength = linkUrl.length;
+    }
+    else if (currentUrl.startsWith(linkUrl)) {
+      const isHomePage = linkUrl.endsWith('/') || linkUrl.endsWith('index.html') || linkUrl.endsWith('/en') || linkUrl.endsWith('/kn');
+
+      if (!isHomePage && linkUrl.length > longestMatchLength) {
+        bestMatch = link;
+        longestMatchLength = linkUrl.length;
+      }
+    }
+  });
+  if (bestMatch) {
+    bestMatch.classList.add(activeClassName);
+    const parentMenu = bestMatch.closest(menuSelector);
+    if (parentMenu) parentMenu.classList.add(activeClassName);
+  } else {
+    const homeLink = Array.from(menuLinks).find(link => {
+      const lUrl = link.href.split(/[?#]/)[0];
+      return lUrl.endsWith('/') || lUrl.endsWith('index.html') || lUrl.endsWith('/en') || lUrl.endsWith('/kn');
+    });
+
+    if (homeLink) {
+      homeLink.classList.add(activeClassName);
+      const parentMenu = homeLink.closest(menuSelector);
+      if (parentMenu) parentMenu.classList.add(activeClassName);
+    }
+  }
+}
+
 // ----------- Vùng gọi biến --------------
 document.addEventListener("DOMContentLoaded", () => {
   includeHTML(() => {
@@ -556,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
 
-     initSwiperSlider({
+    initSwiperSlider({
       mainSelector: '.guest-comment__swiper',
       minSlides: 8,
       // autoplay: { delay: 3000, disableOnInteraction: false },
@@ -627,10 +670,10 @@ document.addEventListener("DOMContentLoaded", () => {
       loop: true,
       slidesPerView: 1,
       spaceBetween: 20,
-       grid: {
-            rows: 2,
-            fill: 'row'
-          },
+      grid: {
+        rows: 2,
+        fill: 'row'
+      },
       navigation: {
         nextEl: '.logo-brand__swiper .swiper-button-next',
         prevEl: '.logo-brand__swiper .swiper-button-prev',
@@ -641,22 +684,22 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       breakpoints: {
         1200: {
-          slidesPerView: 5, 
+          slidesPerView: 5,
           grid: {
             rows: 3,
             fill: 'row'
           },
         },
         900: {
-          slidesPerView: 4, 
+          slidesPerView: 4,
           grid: {
             rows: 2,
             fill: 'row'
           },
         },
         500: {
-          slidesPerView: 2, 
-           grid: {
+          slidesPerView: 2,
+          grid: {
             rows: 2,
             fill: 'row'
           },
@@ -677,11 +720,11 @@ document.addEventListener("DOMContentLoaded", () => {
         activeClass: "active",
         closeOnOutside: true,
         closeOnEsc: true,
-        innerSelector: ".m-menu__link" 
+        innerSelector: ".m-menu__link"
       },
       {
         trigger: ".news-detail__content h3",
-        behavior: "activate", 
+        behavior: "activate",
         activeClass: "active",
       },
     ]);
@@ -691,6 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyImageEnhancements();
     initRevealEffect();
     initFormValidation();
+    initUniversalActiveMenu('.header-bottom__item', 'active')
   });
 });
 
