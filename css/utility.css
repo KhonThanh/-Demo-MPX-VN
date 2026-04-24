@@ -21,8 +21,9 @@
 .item-padding-80-0 { padding: 80px 0px; }
 .btn-padding{padding: 8px 24px;}
 .un-wrap { white-space: nowrap; }
-.img-icon{ object-fit: contain; object-position: center; height: 100%; width: 100%; }
-.img-content{ object-fit: cover; object-position: center; height: 100%; width: 100%; }
+.img-icon,.img-content{ object-position: center; height: 100%; width: 100%; }
+.img-content{ object-fit: cover;}
+.img-icon{ object-fit: contain;}
 .jus-sb { justify-content: space-between; }
 .gap-30 { gap: 30px; }
 .gap-20 { gap: 20px; }
