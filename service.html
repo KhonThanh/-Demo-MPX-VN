@@ -27,9 +27,95 @@
                 <a href="javascript:void(0)" class="nav-bar__item">Dịch vụ</a>
             </div>
         </section>
-        <section class="container-f">
+        <section class="archive-section container-f container-padding bg-white-secondary">
             <div class="container-l flex flex-wrap gap-20">
-                <div class="unity-"></div>
+
+                <div class="archive-main  flex flex-col gap-30">
+                    <div class="archive-header flex flex-col gap-10">
+                        <h1 class="section-title bold uppercase">Gian hàng trưng bày triển lãm</h1>
+                        <div class="title-border-bottom"></div>
+                    </div>
+
+                    <div class="archive-grid flex flex-wrap gap-20">
+                        <article class="archive-item bg-white border-radius-5 overflow-hidden shadow-sm flex flex-col">
+                            <div class="archive-item__thumb pos-rel">
+                                <img src="./img/product/booth.jpg" class="img-content" alt="Product Name">
+                            </div>
+
+                            <div class="archive-item__content item-padding-20 flex flex-col gap-10">
+                                <div class="archive-item__rating flex gap-5">
+                                    <div class="rate-star active">
+                                        <img src="./img/icon/star-gray.svg" class="img-icon">
+                                    </div>
+                                    <div class="rate-star active"><img src="./img/icon/star-gray.svg" class="img-icon">
+                                    </div>
+                                    <div class="rate-star active"><img src="./img/icon/star-gray.svg" class="img-icon">
+                                    </div>
+                                    <div class="rate-star active"><img src="./img/icon/star-gray.svg" class="img-icon">
+                                    </div>
+                                    <div class="rate-star active"><img src="./img/icon/star-gray.svg" class="img-icon">
+                                    </div>
+                                </div>
+
+                                <h4 class="archive-item__title bold uppercase">MPX ECO-FLOOR LITE (INDOOR EVENTS)</h4>
+                                <p class="archive-item__desc text-sm text-color-deactive clamp-text">
+                                    MPX ModuWall là hệ hộp đèn module kết nối – cho phép tạo thành vách tường lớn booth
+                                    triển lãm...
+                                </p>
+
+                                <button
+                                    class="archive-item__btn bg-primary text-color-white btn-padding border-radius-5 bold uppercase cursor-pointer border-none">
+                                    Liên hệ ➔
+                                </button>
+                            </div>
+                            <a href="javascript:void(0)" class="pos-abs cover-all" aria-label="Xem sản phẩm"></a>
+                        </article>
+                    </div>
+
+                    <div class="archive-pagination flex center-hor gap-10 item-padding-20">
+                        <button class="pagination-btn prev">&lt;</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn">2</button>
+                        <button class="pagination-btn next">&gt;</button>
+                    </div>
+                </div>
+
+                <aside class="archive-sidebar flex flex-col gap-30">
+
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title bold uppercase">Công cụ tìm kiếm</h3>
+                        <div class="widget-search pos-rel">
+                            <input type="text" placeholder="Nhập từ khóa..." class="fill-view border-radius-5">
+                            <button class="search-submit pos-abs">🔍</button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title bold uppercase">Danh mục sản phẩm</h3>
+                        <ul class="widget-list flex flex-col gap-10">
+                            <li><a href="#" class="widget-link">Tạo mã CSR trên cPanel</a></li>
+                            <li><a href="#" class="widget-link">Hướng dẫn tạo CSR trên cPanel</a></li>
+                            <li><a href="#" class="widget-link">Khắc phục lỗi cài đặt SSL</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title bold uppercase">Bài viết gần đây</h3>
+                        <div class="widget-posts flex flex-col gap-20">
+                            <div class="post-mini flex gap-15">
+                                <div class="post-mini__img border-radius-5 overflow-hidden">
+                                    <img src="./img/news/thumb.jpg" class="img-content">
+                                </div>
+                                <div class="post-mini__info flex flex-col gap-5">
+                                    <h5 class="post-mini__title bold text-sm clamp-text">Tiêu đề bài viết tin tức...
+                                    </h5>
+                                    <span class="post-mini__meta text-xs text-color-deactive">📅 17/4/2026</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </aside>
             </div>
         </section>
     </main>
