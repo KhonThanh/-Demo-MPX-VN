@@ -595,6 +595,11 @@ document.addEventListener("DOMContentLoaded", () => {
           slidesPerView: 1, // Điện thoại hiện 1
           spaceBetween: 10
         },
+
+        500: {
+          slidesPerView: 2, // Điện thoại hiện 1
+          spaceBetween: 10
+        },
         768: {
           slidesPerView: 3, // Tablet hiện 2
           spaceBetween: 15
@@ -606,7 +611,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-     initSwiperSlider({
+    initSwiperSlider({
       mainSelector: '.news-swiper',
       slidesPerView: 3,
       spaceBetween: 20,
@@ -625,7 +630,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Thêm Breakpoints responsive
       breakpoints: {
         320: {
-          slidesPerView: 1, // Điện thoại hiện 1
+          slidesPerView: 2, // Điện thoại hiện 1
           spaceBetween: 10
         },
         768: {
@@ -664,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSwiperSlider({
       mainSelector: '.service-list',
       minSlides: 0,
-      loop: true, 
+      loop: true,
       slidesPerView: 1,
       spaceBetween: 20,
       grid: {
@@ -707,10 +712,10 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
 
-     initSwiperSlider({
+    initSwiperSlider({
       mainSelector: '.service-intro__list',
       minSlides: 0,
-      loop: true, 
+      loop: true,
       slidesPerView: 1,
       spaceBetween: 20,
       grid: {
@@ -756,7 +761,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSwiperSlider({
       mainSelector: '.service-list',
       minSlides: 0,
-      loop: true, 
+      loop: true,
       slidesPerView: 1,
       spaceBetween: 20,
       grid: {

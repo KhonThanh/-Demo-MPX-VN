@@ -157,6 +157,11 @@
     .home-banner__desc {
         font-size: calc(var(--font-size-base));
     }
+    
+    .project-btn p:first-child,
+    .news-btn p:first-child{
+        display: none;
+    }
 }
 
 /* @media screen and (max-width : 700px) {} */
