@@ -366,36 +366,32 @@ function renderDynamicList(headingData, targetSelector) {
 // 🧩 2️⃣ Hàm dùng chung cho tất cả Swiper
 function initSwiperSlider({
   mainSelector,
-  minSlides = 0, // Số lượng slide tối thiểu cần có để loop mượt mà (nếu loop: true)
-  autoplay = false, // false, true, hoặc object { delay: 2500, disableOnInteraction: false }
-  spaceBetween = 0, // Khoảng cách giữa các slide
-  slidesPerView = 1, // Số lượng slide hiển thị trên mỗi view
-  loop = false, // Bật/tắt chế độ lặp vô hạn
-  navigation = { // Cấu hình nút điều hướng
-    nextEl: null, // Selector của nút next
-    prevEl: null  // Selector của nút prev
+  minSlides = 0,
+  autoplay = false,
+  spaceBetween = 0,
+  slidesPerView = 1,
+  loop = false,
+  navigation = {
+    nextEl: null,
+    prevEl: null
   },
-  pagination = { // Cấu hình phân trang (dots)
-    el: null,     // Selector của container chứa dots
-    clickable: true // Cho phép click vào dots để chuyển slide
+  pagination = {
+    el: null,
+    clickable: true
   },
-  breakpoints = null, // Cấu hình responsive
-  ...extraOptions // Các tùy chọn Swiper khác
+  breakpoints = null,
+  ...extraOptions
 }) {
   const swiperContainer = document.querySelector(mainSelector);
   if (!swiperContainer) {
     console.warn(`Swiper container not found for selector: ${mainSelector}`);
     return;
   }
-
-  // Nếu loop được bật và minSlides được chỉ định, đảm bảo đủ slide để vòng lặp mượt mà
   if (loop && minSlides > 0) {
     const wrapper = swiperContainer.querySelector('.swiper-wrapper');
     if (wrapper) {
       const slides = Array.from(wrapper.children);
       let currentSlideCount = slides.length;
-      // Swiper cần ít nhất slidesPerView * 2 (hoặc hơn) để loop mượt mà khi slidesPerView > 1
-      // Nếu slidesPerView = 1, cần ít nhất 2-3 slide
       const requiredForLoop = slidesPerView > 1 ? slidesPerView * 2 : 3;
       const actualMin = Math.max(minSlides, requiredForLoop);
 
@@ -579,24 +575,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initSwiperSlider({
       mainSelector: '.project-swiper',
-      minSlides: 8,
-      autoplay: { delay: 3000, disableOnInteraction: false },
-      loop: true,
-      slidesPerView: 1,
+      slidesPerView: 3,
       spaceBetween: 20,
-      navigation: {
-        nextEl: '.project-swiper .swiper-button-next',
-        prevEl: '.project-swiper .swiper-button-prev',
+      loop: true,
+      minSlides: 6,
+      autoplay: {
+        delay: 3000,
       },
       pagination: {
         el: '.custom-dots',
-        clickable: true,
       },
+      navigation: {
+        nextEl: '.project-slider-wrapper .custom-next-btn',
+        prevEl: '.project-slider-wrapper .custom-prev-btn',
+      },
+      // Thêm Breakpoints responsive
       breakpoints: {
-        1200: { slidesPerView: 4, spaceBetween: 20, },
-        900: { slidesPerView: 3, spaceBetween: 20, },
-        500: { slidesPerView: 2, spaceBetween: 20, },
+        320: {
+          slidesPerView: 1, // Điện thoại hiện 1
+          spaceBetween: 10
+        },
+        768: {
+          slidesPerView: 3, // Tablet hiện 2
+          spaceBetween: 15
+        },
+        1024: {
+          slidesPerView: 4, // PC hiện 3
+          spaceBetween: 20
+        }
+      }
+    });
+
+     initSwiperSlider({
+      mainSelector: '.news-swiper',
+      slidesPerView: 3,
+      spaceBetween: 20,
+      loop: true,
+      minSlides: 6,
+      autoplay: {
+        delay: 3000,
       },
+      pagination: {
+        el: '.custom-dots',
+      },
+      navigation: {
+        nextEl: '.news-slider-wrapper .custom-next-btn',
+        prevEl: '.news-slider-wrapper .custom-prev-btn',
+      },
+      // Thêm Breakpoints responsive
+      breakpoints: {
+        320: {
+          slidesPerView: 1, // Điện thoại hiện 1
+          spaceBetween: 10
+        },
+        768: {
+          slidesPerView: 3, // Tablet hiện 2
+          spaceBetween: 15
+        },
+        1024: {
+          slidesPerView: 4, // PC hiện 3
+          spaceBetween: 20
+        }
+      }
     });
 
     initSwiperSlider({
@@ -607,8 +647,8 @@ document.addEventListener("DOMContentLoaded", () => {
       slidesPerView: 1,
       spaceBetween: 20,
       navigation: {
-        nextEl: '.guest-comment__swiper .swiper-button-next',
-        prevEl: '.guest-comment__swiper .swiper-button-prev',
+        nextEl: '.guest-comment__wrapper .swiper-button-next',
+        prevEl: '.guest-comment__wrapper .swiper-button-prev',
       },
       pagination: {
         el: '.custom-dots',
@@ -624,16 +664,16 @@ document.addEventListener("DOMContentLoaded", () => {
     initSwiperSlider({
       mainSelector: '.service-list',
       minSlides: 0,
-      loop: false,
-      slidesPerView: 1, // Mặc định cho mobile
+      loop: true, 
+      slidesPerView: 1,
       spaceBetween: 20,
       grid: {
         rows: 1,
         fill: 'row'
       },
       navigation: {
-        nextEl: '.service-list .swiper-button-next',
-        prevEl: '.service-list .swiper-button-prev',
+        nextEl: '.service-slider-wrapper .custom-next-btn',
+        prevEl: '.service-slider-wrapper .custom-prev-btn',
       },
       pagination: {
         el: '.service-list .swiper-pagination',
@@ -641,21 +681,24 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       breakpoints: {
         1200: {
-          slidesPerView: 3, spaceBetween: 20,
+          slidesPerView: 3,
+          spaceBetween: 20,
           grid: {
             rows: 2,
             fill: 'row'
           },
         },
         1000: {
-          slidesPerView: 3, spaceBetween: 20,
+          slidesPerView: 3,
+          spaceBetween: 20,
           grid: {
             rows: 1,
             fill: 'row'
           },
         },
         500: {
-          slidesPerView: 2, spaceBetween: 20,
+          slidesPerView: 2,
+          spaceBetween: 20,
           grid: {
             rows: 1,
             fill: 'row'
@@ -663,9 +706,102 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       },
     });
+
+     initSwiperSlider({
+      mainSelector: '.service-intro__list',
+      minSlides: 0,
+      loop: true, 
+      slidesPerView: 1,
+      spaceBetween: 20,
+      grid: {
+        rows: 1,
+        fill: 'row'
+      },
+      navigation: {
+        nextEl: '.process-slider-wrapper .custom-next-btn',
+        prevEl: '.process-slider-wrapper .custom-prev-btn',
+      },
+      pagination: {
+        el: '.service-list .swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        1200: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+          grid: {
+            rows: 2,
+            fill: 'row'
+          },
+        },
+        1000: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
+        500: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
+      },
+    });
+
+    initSwiperSlider({
+      mainSelector: '.service-list',
+      minSlides: 0,
+      loop: true, 
+      slidesPerView: 1,
+      spaceBetween: 20,
+      grid: {
+        rows: 1,
+        fill: 'row'
+      },
+      navigation: {
+        nextEl: '.intro-slider-wrapper .custom-next-btn',
+        prevEl: '.intro-slider-wrapper .custom-prev-btn',
+      },
+      pagination: {
+        el: '.service-list .swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        1200: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+          grid: {
+            rows: 2,
+            fill: 'row'
+          },
+        },
+        1000: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
+        500: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+          grid: {
+            rows: 1,
+            fill: 'row'
+          },
+        },
+      },
+    });
+
     initSwiperSlider({
       mainSelector: '.logo-brand__swiper',
-      minSlides: 30,
+      minSlides: 18,
       autoplay: { delay: 3000, disableOnInteraction: false },
       loop: true,
       slidesPerView: 1,
@@ -675,8 +811,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fill: 'row'
       },
       navigation: {
-        nextEl: '.logo-brand__swiper .swiper-button-next',
-        prevEl: '.logo-brand__swiper .swiper-button-prev',
+        nextEl: '.logo-brand-wrapper .swiper-button-next',
+        prevEl: '.logo-brand-wrapper .swiper-button-prev',
       },
       pagination: {
         el: '.logo-brand__swiper .swiper-pagination',
