@@ -873,6 +873,15 @@ document.addEventListener("DOMContentLoaded", () => {
         behavior: "activate",
         activeClass: "active",
       },
+      {
+        trigger: ".btn-register__cal",
+        target: ".popup-register__container",
+        behavior: "toggle",
+        activeClass: "active",
+        closeOnOutside: true,
+        closeOnEsc: true,
+        innerSelector: ".m-menu__link"
+      },
     ]);
     // 🟡 roll to the top
     initScrollToTop();

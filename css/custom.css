@@ -1188,6 +1188,13 @@
     color: var(--white-color);
 }
 
-.prev {}
+.popup-register__container{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
 
-.next {}
+.popup-register__container.active{
+    display: flex;
+}
