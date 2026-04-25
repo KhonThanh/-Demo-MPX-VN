@@ -868,6 +868,11 @@ document.addEventListener("DOMContentLoaded", () => {
         behavior: "activate",
         activeClass: "active",
       },
+      {
+        trigger: ".pagination-btn",
+        behavior: "activate",
+        activeClass: "active",
+      },
     ]);
     // 🟡 roll to the top
     initScrollToTop();
