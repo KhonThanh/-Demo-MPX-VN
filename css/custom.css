@@ -1096,12 +1096,14 @@
 }
 
 /* css phần dịch vụ */
+.detail-header,
 .archive-main {
     width: calc(75% - calc(var(--gap) / 2));
 }
 
 .archive-sidebar {
     width: calc(25% - calc(var(--gap) / 2));
+    height: fit-content;
 }
 
 /* css phần component menu aside */
@@ -1148,13 +1150,6 @@
     -webkit-line-clamp: 2;
 }
 
-.widget-posts__link {
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
-
 .service-mini__img {
     aspect-ratio: 1 / 1;
     width: calc(25% - 10px);
@@ -1188,13 +1183,282 @@
     color: var(--white-color);
 }
 
-.popup-register__container{
+.popup-comment__container,
+.popup-register__container {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
 }
 
-.popup-register__container.active{
+.popup-comment__container.active,
+.popup-register__container.active {
     display: flex;
+}
+
+/* css cho trang bài viết sản phẩm */
+.icon-box-sm {
+    width: 48px;
+    height: 48px;
+    border: 1px solid transparent;
+    transition: border 0.3s ease-in-out;
+}
+
+.icon-box-sm:hover {
+    border: 1px solid var(--primary-color);
+}
+
+.detail-cover {
+    aspect-ratio: 985 / 441;
+    width: 100%;
+    height: auto;
+}
+
+.detail-content p {
+    font-size: var(--font-size-base);
+}
+
+.detail-content blockquote {
+    padding: 10px 0px 10px 20px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.detail-content blockquote p {
+    font-style: italic;
+}
+
+.detail-content blockquote h2 {
+    margin-bottom: 10px;
+}
+
+.detail-content blockquote p,
+.detail-content blockquote h2 {
+    font-size: var(--font-size-base);
+}
+
+.tab-panel{
+    display: none;
+}
+
+.tab-panel.active{
+    display: block;
+}
+
+.tab-panel__container {
+    max-height: 4000px; 
+    transition: max-height 0.4s ease-in-out;
+    overflow: hidden;
+}
+
+.tab-panel__container.hide {
+    max-height: 100px;
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+.tab-panel ul,
+.detail-content ul {
+    list-style: none;
+}
+
+.tab-panel ul li p{
+    font-size: var(--font-size-base);
+}
+
+.tab-panel ul li,
+.detail-content ul li {
+    position: relative;
+    padding-left: 30px;
+}
+
+.tab-panel ul li:after,
+.detail-content ul li::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/icon/check-orange.svg');
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    top: 2px;
+    left: 0;
+}
+
+.tab-panel ul li:not(:last-child),
+.detail-content ul li:not(:last-child) {
+    margin-bottom: 16px;
+}
+
+.review-overview {
+    flex: 1 1 33.33%;
+}
+
+.review-list {
+    flex: 1 1 66.67%
+}
+
+.server-detail>.rate-stars,
+.server-detail>.rate-stars .star {
+    font-size: calc(var(--font-size-base) + 20px);
+}
+
+.rate-stars {
+    display: flex;
+    gap: 2px;
+    font-size: calc(var(--font-size-base) + 4px);
+}
+
+.rate-stars .star {
+    color: var(--deactive-color, #e0e0e0);
+}
+
+.rate-stars .star.active {
+    color: var(--primary-color, #ff9800);
+}
+
+.detail-header__content h1 {
+    font-size: calc(var(--font-size-base) + 32px);
+    text-transform: unset;
+}
+
+.review-overview {}
+
+.review-badge {
+    width: fit-content;
+}
+
+.review-score-box {}
+
+.score-number {
+    font-size: calc(var(--font-size-base) + 48px);
+}
+
+.chart-label {
+    width: 45px;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+.chart-count {
+    width: 30px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.chart-track {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.chart-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease-in-out;
+}
+
+.fill-85 {
+    width: 85%;
+}
+
+.fill-15 {
+    width: 15%;
+}
+
+.fill-5 {
+    width: 5%;
+}
+
+.fill-1 {
+    width: 1%;
+}
+
+.fill-0 {
+    width: 0%;
+}
+
+.comment-item {
+    border-bottom: 1px solid var(--deactive-color);
+}
+
+.filter-btn {
+    padding: 5px 15px;
+    border: 1px solid transparent;
+    transition: all 0.5s ease-in-out;
+}
+
+.filter-btn:hover {
+    border: 1px solid var(--primary-color)
+}
+
+.btn-write__container {
+    padding-top: 20px;
+    border-top: 1px solid var(--deactive-color)
+}
+
+.comment-avatar {
+    aspect-ratio: 1 / 1;
+    max-width: 48px;
+    width: 100%;
+    max-height: 48px;
+}
+
+.popup-comment__close {
+    padding: 24px;
+    aspect-ratio: 1 / 1;
+    width: 59px;
+    height: auto;
+}
+
+.review-pagination .page-btn {
+    border: 1px solid var(--deactive-color);
+}
+
+.review-pagination .page-btn.active {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: 1px solid var(--primary-color);
+}
+
+.tab-panel {
+    border: 1px solid var(--deactive-color);
+}
+
+.tab-panel img {
+    aspect-ratio: 4 / 3;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+
+.tab-btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.tab-btn {
+    background-color: var(--white-color);
+    border: 1px solid var(--deactive-color);
+}
+
+.tab-panel table {
+    border-top: 2px solid var(--second-white-color);
+    border-left: 2px solid var(--second-white-color);
+    border-right: 2px solid var(--second-white-color);
+    border-collapse: collapse;
+}
+
+.tab-panel table td {
+    padding: 10px 20px;
+    min-width: 240px;
+    border: 1;
+    border-bottom: 2px solid var(--second-white-color);
+}
+
+.tab-panel table td:first-child {
+    border-right: 2px solid var(--second-white-color);
+
 }

@@ -384,7 +384,7 @@ function initSwiperSlider({
 }) {
   const swiperContainer = document.querySelector(mainSelector);
   if (!swiperContainer) {
-    console.warn(`Swiper container not found for selector: ${mainSelector}`);
+    // console.warn(`Swiper container not found for selector: ${mainSelector}`);
     return;
   }
   if (loop && minSlides > 0) {
@@ -512,45 +512,57 @@ function initFormValidation(root = document) {
 
 // js add active định vị ở menu
 function initUniversalActiveMenu(menuSelector = '', activeClassName = 'active') {
-  const currentUrl = window.location.href.split(/[?#]/)[0];
+    const currentUrl = window.location.href.split(/[?#]/)[0];
 
-  const menuLinks = document.querySelectorAll(`${menuSelector} a`);
-  let bestMatch = null;
-  let longestMatchLength = 0;
+    const menuLinks = document.querySelectorAll(`${menuSelector} a`);
+    let bestMatch = null;
+    let longestMatchLength = 0;
 
-  menuLinks.forEach(link => {
-    const hrefAttr = link.getAttribute('href');
-    if (!hrefAttr || hrefAttr.startsWith('#') || hrefAttr.startsWith('javascript')) return;
-    const linkUrl = link.href.split(/[?#]/)[0];
-    if (currentUrl === linkUrl) {
-      bestMatch = link;
-      longestMatchLength = linkUrl.length;
-    }
-    else if (currentUrl.startsWith(linkUrl)) {
-      const isHomePage = linkUrl.endsWith('/') || linkUrl.endsWith('index.html') || linkUrl.endsWith('/en') || linkUrl.endsWith('/kn');
+    menuLinks.forEach(link => {
+        const hrefAttr = link.getAttribute('href');
+        if (!hrefAttr || hrefAttr.startsWith('#') || hrefAttr.startsWith('javascript')) return;
+        const linkUrl = link.href.split(/[?#]/)[0];
 
-      if (!isHomePage && linkUrl.length > longestMatchLength) {
-        bestMatch = link;
-        longestMatchLength = linkUrl.length;
-      }
-    }
-  });
-  if (bestMatch) {
-    bestMatch.classList.add(activeClassName);
-    const parentMenu = bestMatch.closest(menuSelector);
-    if (parentMenu) parentMenu.classList.add(activeClassName);
-  } else {
-    const homeLink = Array.from(menuLinks).find(link => {
-      const lUrl = link.href.split(/[?#]/)[0];
-      return lUrl.endsWith('/') || lUrl.endsWith('index.html') || lUrl.endsWith('/en') || lUrl.endsWith('/kn');
+        // ==========================================
+        // VŨ KHÍ MỚI: Bắt theo keyword từ data-match
+        // ==========================================
+        const matchKeyword = link.getAttribute('data-match');
+        if (matchKeyword && currentUrl.includes(matchKeyword)) {
+            bestMatch = link;
+            longestMatchLength = 9999; // Cấp quyền ưu tiên tuyệt đối, khỏi check mấy cái dưới
+            return;
+        }
+
+        // Logic cũ (Vẫn giữ để chạy cho các trang bình thường không có data-match)
+        if (currentUrl === linkUrl) {
+            bestMatch = link;
+            longestMatchLength = linkUrl.length;
+        } else if (currentUrl.startsWith(linkUrl)) {
+            const isHomePage = linkUrl.endsWith('/') || linkUrl.endsWith('index.html') || linkUrl.endsWith('/en') || linkUrl.endsWith('/kn');
+
+            if (!isHomePage && linkUrl.length > longestMatchLength) {
+                bestMatch = link;
+                longestMatchLength = linkUrl.length;
+            }
+        }
     });
 
-    if (homeLink) {
-      homeLink.classList.add(activeClassName);
-      const parentMenu = homeLink.closest(menuSelector);
-      if (parentMenu) parentMenu.classList.add(activeClassName);
+    if (bestMatch) {
+        bestMatch.classList.add(activeClassName);
+        const parentMenu = bestMatch.closest(menuSelector);
+        if (parentMenu) parentMenu.classList.add(activeClassName);
+    } else {
+        const homeLink = Array.from(menuLinks).find(link => {
+            const lUrl = link.href.split(/[?#]/)[0];
+            return lUrl.endsWith('/') || lUrl.endsWith('index.html') || lUrl.endsWith('/en') || lUrl.endsWith('/kn');
+        });
+
+        if (homeLink) {
+            homeLink.classList.add(activeClassName);
+            const parentMenu = homeLink.closest(menuSelector);
+            if (parentMenu) parentMenu.classList.add(activeClassName);
+        }
     }
-  }
 }
 
 // ----------- Vùng gọi biến --------------
@@ -874,14 +886,66 @@ document.addEventListener("DOMContentLoaded", () => {
         activeClass: "active",
       },
       {
+        trigger: ".page-btn",
+        behavior: "activate",
+        activeClass: "active",
+      },
+      {
         trigger: ".btn-register__cal",
         target: ".popup-register__container",
         behavior: "toggle",
         activeClass: "active",
         closeOnOutside: true,
         closeOnEsc: true,
-        innerSelector: ".m-menu__link"
+        innerSelector: ".popup-register__container"
       },
+      {
+        trigger: ".btn-write-review",
+        target: ".popup-comment__container",
+        behavior: "toggle",
+        activeClass: "active",
+        closeOnOutside: true,
+        closeOnEsc: true,
+        innerSelector: ".popup-comment__content",
+        closeBtn: ".popup-comment__close"
+      },
+      {
+        trigger: ".tab-btn",
+        behavior: "activate",
+        groupSelector: ".tab-btn",
+        activeClass: "active",
+
+        onActiveChange: function (isActive, triggerEl) {
+          if (isActive) {
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+              panel.classList.remove('active');
+            });
+
+            const targetId = triggerEl.getAttribute('data-target');
+
+            if (targetId) {
+              const targetPanel = document.querySelector(targetId);
+              if (targetPanel) {
+                targetPanel.classList.add('active');
+              }
+            }
+          }
+        }
+      },
+      {
+        trigger: ".btn-hide",              
+        target: ".tab-panel__container",    
+        behavior: "toggle",                 
+        activeClass: "hide",                
+        onActiveChange: function (isActive, triggerEl, targetEl) {
+          if (isActive) {
+            triggerEl.innerText = "Xem thêm";
+          }
+          else {
+            triggerEl.innerText = "Ẩn đi";
+          }
+        }
+      }
     ]);
     // 🟡 roll to the top
     initScrollToTop();

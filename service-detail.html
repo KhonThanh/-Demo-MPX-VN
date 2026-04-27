@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPX VN | Dịch vụ</title>
+    <link rel="icon" type="image/png" href="./img/logo/logo-favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="./img/banner/banner-home.webp">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <!-- <link rel="stylesheet" href="../css/style.min.css"> -->
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+    <link rel="stylesheet" href="./css/utility.css">
+</head>
+
+<body>
+    <header class="container-f bg-black" data-include="./component/header.html"></header>
+    <main class="container-f flex flex-col center-hor pos-rel">
+        <section class="flex bg-gray container-f">
+            <div class="container-l nav-bar__container">
+                <a href="./index.html" class="nav-bar__item">Trang chủ</a>
+                <a href="javascript:void(0)" class="nav-bar__item">Tin tức</a>
+            </div>
+        </section>
+        <section class="archive-section container-f container-padding bg-white-secondary">
+            <div class="container-l flex  flex-wrap gap-20">
+                <div class="detail-header flex-1 flex flex-col gap-20">
+                    <div
+                        class="flex flex-col server-detail gap-20 detail-header__content bg-white border-radius-5 item-padding-30">
+                        <h1 class="bold">MPX đồng hành cùng INNOEX 2024</h1>
+                        <div class="rate-stars flex gap-2">
+                            <span class="star active">★</span>
+                            <span class="star active">★</span>
+                            <span class="star active">★</span>
+                            <span class="star active">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <div class="meta-action flex gap-10 center-ver">
+                            <div class="share-group flex gap-10 ">
+                                <div class="pos-rel icon-box-sm cursor-pointer border-radius-5">
+                                    <img src="./img/icon/fb.svg" class="img-icon">
+                                    <a href="javascript:void()" class="widget-posts__link pos-abs" data-type="facebook"
+                                        title="Chia sẻ Facebook">
+                                    </a>
+                                </div>
+
+                                <button type="button"
+                                    class="icon-box-sm bg-white-secondary border-radius-5 js-share-btn" data-type="copy"
+                                    title="Sao chép liên kết">
+                                    <img src="./img/icon/link.svg" class="img-icon">
+                                </button>
+
+                                <button type="button"
+                                    class="icon-box-sm bg-white-secondary border-radius-5 js-share-btn"
+                                    data-type="share" title="Chia sẻ khác">
+                                    <img src="./img/icon/share-arrow.svg" class="img-icon">
+                                </button>
+
+                                <div class="pos-rel icon-box-sm cursor-pointer border-radius-5">
+                                    <img src="./img/icon/zalo.svg" class="img-icon">
+                                    <a href="javascript:void()" class="widget-posts__link pos-abs" data-type="zalo"
+                                        title="Chia sẻ Zalo">
+                                    </a>
+                                </div>
+                                <div
+                                    class="cursor-pointer bg-primary flex center-ver gap-20 btn-padding border-radius-5 pos-rel">
+                                    <p class="uppercase text-color-white bold un-wrap">Liên hệ</p>
+                                    <div class="header-bottom__icon">
+                                        <img class="img-icon" src="./img/icon/arrow-right.svg" alt="icon-mui-ten">
+                                    </div>
+                                    <a href="javascript:void()" class="widget-posts__link pos-abs"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-meta flex flex-col flex-wrap gap-10">
+                            <div class="detail-cover border-radius-10 overflow-hidden">
+                                <img src="./img/news/news.jpg" class="img-content" alt="Cover">
+                            </div>
+
+                            <div class="container-ts detail-content flex flex-col gap-20">
+                                <p><b>MPX HybridBooth</b> là hệ giải pháp gian hàng triển lãm hoặc activation booth sử
+                                    dụng kết
+                                    cấu khung hộp đèn MPX làm nền hiển thị hình ảnh kết hợp với các chi tiết cấu trúc
+                                    cứng như kệ trưng bày, bàn lễ tân, vách ngăn foam/PVC/woodlaminate. Mục tiêu là tạo
+                                    nên không gian thương hiệu hoàn chỉnh mà vẫn đảm bảo thi công nhanh, gọn, tái sử
+                                    dụng được.</p>
+                            </div>
+                            <div class="container-ts service-tab flex flex-col gap-20">
+                                <div class="tab-nav flex gap-10">
+                                    <button type="button"
+                                        class="tab-btn btn-padding border-radius-5 bold cursor-pointer active"
+                                        data-target="#tab-gallery">
+                                        Thư viện hình ảnh
+                                    </button>
+
+                                    <button type="button"
+                                        class="tab-btn btn-padding border-radius-5 bold cursor-pointer"
+                                        data-target="#tab-content">
+                                        Nội dung
+                                    </button>
+                                </div>
+
+                                <div class="tab-panels border-radius-5">
+
+                                    <div id="tab-gallery" class="tab-panel item-padding-20 gap-20 border-radius-5 active">
+                                        <div class="tab-panel__container">
+                                            <img src="./img/service/p1.jpg" alt="Gallery">
+                                            <img src="./img/service/p2.jpg" alt="Gallery">
+                                            <img src="./img/service/p3.jpg" alt="Gallery">
+                                            <img src="./img/service/p4.jpg" alt="Gallery">
+                                            <img src="./img/service/p5.jpg" alt="Gallery">
+                                        </div>
+
+                                        <div class="flex center-hor">
+                                            <button
+                                                class="btn-hide item-padding-10-20 bg-primary border-radius-5 text-color-white">Ẩn
+                                                đi</button>
+                                        </div>
+                                    </div>
+
+                                    <div id="tab-content"
+                                        class="tab-panel flex-col gap-20 item-padding-20 border-radius-5">
+                                        <div class="tab-panel__container flex flex-col gap-20">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Thuộc tính</td>
+                                                        <td>Thông tin chi tiết</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cấu trúc chính</td>
+                                                        <td>Hộp đèn khung nhôm 80~140mm kết nối module</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Chi tiết bổ sung</td>
+                                                        <td>Kệ/ tủ / quầy / vách ngăn làm từ MDF phủ laminate, formex,
+                                                            PVC
+                                                            foam hoặc vật liệu nhẹ</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Chiếu sáng</td>
+                                                        <td>LED trắng 6500K hoặc RGB đổi màu, tích hợp vào các module
+                                                            tường
+                                                            hộp đèn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Kết nối module</td>
+                                                        <td>Lắp ráp nhanh bằng khớp, có thể thi công booth 3x3m - 6x6m
+                                                            trong
+                                                            2 - 3 giờ</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>In ấn</td>
+                                                        <td>Vải backlit 3P / PVC - chống chói, bám mực tốt, dễ thay nội
+                                                            dung
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <h3>Tính năng nổi bật</h3>
+                                            <ul>
+                                                <li>
+                                                    <span></span>
+                                                    <p><strong>Thẩm mỹ cao - chi phí tối ưu hơn booth gỗ truyền
+                                                            thống:</strong> khung hộp đèn giúp ánh sáng lan tỏa đều,
+                                                        thay vì dùng đèn hắt hay led viền</p>
+                                                </li>
+                                                <li>
+                                                    <span></span>
+                                                    <p><strong>Dễ vận chuyển & tái sử dụng nhiều lần:</strong> tất cả
+                                                        cấu kiện có thể đóng kiện gọn gàng, thi công lại ở nhiều sự kiện
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <span></span>
+                                                    <p><strong>Modular linh hoạt:</strong> có thể dựng theo dạng booth 1
+                                                        mặt, 2 mặt mở, chữ L, chữ U,... tùy chỉnh cho sự kiện lớn - nhỏ
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <span></span>
+                                                    <p><strong>Tích hợp branding đa lớp:</strong> tường phát sáng (hộp
+                                                        đèn) + quầy trưng bày sản phẩm + sản phẩm LCD/TV + QR code + đèn
+                                                        RGB chuyển động</p>
+                                                </li>
+                                            </ul>
+
+                                            <h3>Ứng dụng thực tế</h3>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Không gian/ sự kiện</td>
+                                                        <td>Vai trò sử dụng</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Triển lãm thương mại</td>
+                                                        <td>Gian hàng thương hiệu chuyên nghiệp</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Sự kiện ra mắt sản phẩm</td>
+                                                        <td>Booth kết hợp ánh sáng + trưng bày + demo sản phẩm</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Activation tại trung tâm thương mại</td>
+                                                        <td>Lắp nhanh - thu hút - dễ vận hành - thương hiệu nổi bật</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Sự kiện pop-up / roadshow</td>
+                                                        <td>Gian hàng tháo lắp nhanh phù hợp di chuyển nhiều nơi</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="flex center-hor">
+                                            <button
+                                                class="btn-hide item-padding-10-20 bg-primary border-radius-5 text-color-white">Ẩn
+                                                đi</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="review-section flex bg-white border-radius-5" data-include="./component/comment.html">
+                    </div>
+                </div>
+
+                <aside data-include="./component/sidebar.html"
+                    class="archive-sidebar bg-white item-padding-20 border-radius-5 flex flex-col gap-20"></aside>
+            </div>
+        </section>
+    </main>
+    <footer class="container-f bg-black center-ver flex flex-col item-padding-80-0 gap-30"
+        data-include="./component/footer.html"></footer>
+    <div class="btntotop__container pos-fixed bg-white" data-include="./component/rolltotop.html" id="btnToTop">
+    </div>
+    <div class="popup-register__container pos-fixed z-index-2 center-ver center-hor container-f"
+        data-include="./component/popup.html"></div>
+    <div class="popup-comment__container pos-fixed z-index-2 center-ver center-hor container-f"
+        data-include="./component/popup-comment.html"></div>
+    <script defer type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script defer type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer type="text/javascript" src="./js/frontend.js"></script>
+</body>
+
+</html>

@@ -175,6 +175,10 @@
     .news-btn p:first-child {
         display: none;
     }
+
+    .review-section{
+        flex-direction: column-reverse;
+    }
 }
 
 /* @media screen and (max-width : 700px) {} */
