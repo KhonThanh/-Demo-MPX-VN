@@ -786,6 +786,10 @@
     font-size: calc(var(--font-size-base) + 2px);
 }
 
+.home-banner__blending {
+    pointer-events: none; 
+}
+
 .home-banner__blending,
 .home-banner__background {
     top: 0px;
