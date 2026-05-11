@@ -893,11 +893,11 @@ document.addEventListener("DOMContentLoaded", () => {
       {
         trigger: ".btn-register__cal",
         target: ".popup-register__container",
-        behavior: "toggle",
+        behavior: "activate",
         activeClass: "active",
         closeOnOutside: true,
         closeOnEsc: true,
-        innerSelector: ".popup-register__container"
+        innerSelector: ".contact-section__container"
       },
       {
         trigger: ".btn-write-review",
