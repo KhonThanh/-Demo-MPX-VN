@@ -441,79 +441,6 @@
     background-repeat: no-repeat;
 }
 
-/* css trang lien hệ */
-
-/* css index */
-
-/* Swiper navigation buttons for service-list */
-.swiper-button-next,
-.swiper-button-prev {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
-    /* Tăng z-index lên 10 để không bị cái banner đè */
-    width: 28px !important;
-    /* Dùng !important để đá bay CSS mặc định của Swiper (nó thường set width to hơn) */
-    height: 28px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--white-color) !important;
-    border-radius: 50%;
-    border: 1px solid var(--primary-color);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-/* SET MŨI TÊN NHỎ LẠI VÀ MÀU THEO CHUẨN */
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    font-size: 14px !important;
-    color: var(--primary-color);
-    transition: all 0.25s ease;
-}
-
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-    background-color: var(--primary-color) !important;
-}
-
-.swiper-button-next:hover::after,
-.swiper-button-prev:hover::after {
-    color: var(--white-color);
-}
-
-.news-slider-wrapper .swiper-button-next,
-.guest-comment__wrapper .swiper-button-next,
-.logo-brand-wrapper .swiper-button-next,
-.project-slider-wrapper .swiper-button-next {
-    right: -38px;
-}
-
-.news-slider-wrapper .swiper-button-prev,
-.guest-comment__wrapper .swiper-button-prev,
-.logo-brand-wrapper .swiper-button-prev,
-.project-slider-wrapper .swiper-button-prev {
-    left: -38px;
-}
-
-.slide-container .swiper-button-next {
-    right: 20px;
-}
-
-.slide-container .swiper-button-prev {
-    left: 20px;
-}
-
-.process-slider-wrapper .swiper-button-next,
-.process-slider-wrapper .swiper-button-prev,
-.service-slider-wrapper .swiper-button-next,
-.service-slider-wrapper .swiper-button-prev {
-    display: none;
-}
-
 
 .service-item__content {
     border: 1px solid transparent;
@@ -680,102 +607,12 @@
 }
 
 /* Swiper Custom Dots */
-.swiper-pagination.custom-dots {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
 
-.swiper-pagination-bullet {
-    background: var(--white-color);
-    opacity: 0.7;
-}
-
-.news-swiper .swiper-pagination.custom-dots .project-swiper .swiper-pagination.custom-dots {
-    bottom: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
-.slide-container .swiper-pagination.custom-dots {
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
-.slide-container .swiper-pagination-bullet {
-    background: var(--white-color);
-    opacity: 0.7;
-}
-
-.project-swiper .swiper-pagination-bullet {
-    background: var(--deactive-color);
-}
-
-
-.project-swiper .swiper-pagination-bullet-active,
-.slide-container .swiper-pagination-bullet-active {
-    background: var(--primary-color);
-    opacity: 1;
-}
-
-/* Swiper pagination dots for news-list */
-.news-list .swiper-pagination {
-    position: absolute;
-    bottom: 10px;
-    /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
-.news-list .swiper-pagination-bullet {
-    background: var(--gray-color);
-    opacity: 0.7;
-    width: 8px;
-    height: 8px;
-    margin: 0 4px;
-}
-
-.news-list .swiper-pagination-bullet-active {
-    background: var(--primary-color);
-    opacity: 1;
-}
-
-.service-list .swiper-pagination {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
-.service-list .swiper-pagination-bullet {
-    background: var(--gray-color);
-    opacity: 0.7;
-    width: 8px;
-    height: 8px;
-    margin: 0 4px;
-}
-
-.service-list .swiper-pagination-bullet-active {
-    background: var(--primary-color);
-    opacity: 1;
-}
 
 /* index */
 .home-banner__container {
     width: 100%;
     height: 100%;
-}
-
-.service-list .swiper-button-next,
-.service-list .swiper-button-prev {
-    display: none;
 }
 
 .home-banner__title {
@@ -833,41 +670,6 @@
     color: var(--primary-color);
 }
 
-.project-swiper {
-    padding-bottom: 50px !important;
-}
-
-.logo-brand__swiper .custom-dots,
-.project-swiper .custom-dots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    position: absolute !important;
-    bottom: 0px !important;
-    top: auto !important;
-}
-
-.logo-brand__swiper .custom-dots .swiper-pagination-bullet,
-.project-swiper .custom-dots .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background-color: var(--gray-color, #ccc);
-    border-radius: 50%;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    margin: 0 !important;
-}
-
-.logo-brand__swiper .custom-dots .swiper-pagination-bullet-active,
-.project-swiper .custom-dots .swiper-pagination-bullet-active {
-    width: 32px;
-    background-color: var(--primary-color);
-    border-radius: 8px;
-    opacity: 1;
-}
 
 .project-item__img {
     aspect-ratio: 1 / 1;

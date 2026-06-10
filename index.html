@@ -16,14 +16,15 @@
     <link rel="stylesheet" href="./css/font.css">
     <link rel="stylesheet" href="./css/responsive.css">
     <link rel="stylesheet" href="./css/utility.css">
+    <link rel="stylesheet" href="./css/swiper-custom.css">
 </head>
 
 <body>
     <header class="container-f bg-black" data-include="./component/header.html"></header>
     <main class="container-f flex flex-col center-hor pos-rel">
-        <section class="container-f swiper slide-container">
-            <div class=" swiper-wrapper">
-                <div class="swiper-slide ">
+        <section class="container-f swiper slide-container js-slider-banner">
+            <div class=" swiper-wrapper js-slider-wrapper">
+                <div class="swiper-slide">
                     <div class="home-banner__container container-f flex pos-rel center-hor">
                         <div class="container-l home-banner__content flex flex-col gap-20 center-hor z-index-3">
                             <h2 class="home-banner__title text-color-white bold">Giải pháp kỹ thuật cho sự kiện - triển
@@ -61,15 +62,12 @@
                     đèn quảng cáo và
                     giải pháp trưng
                     bày sáng tạo với công nghệ module, kỹ thuật cơ khí chính xác và tiêu chuẩn quốc tế</p>
-                <div class="service-slider-wrapper pos-rel">
+                <div class="service-slider-wrapper pos-rel js-slider-wrapper">
 
-                    <div class="swiper-button-prev custom-prev-btn"></div>
-                    <div class="swiper-button-next custom-next-btn"></div>
+                    <div class="service-list fill-view swiper js-slider-grid-to-slide">
+                        <div class="swiper-wrapper ">
 
-                    <div class="service-list fill-view swiper">
-                        <div class="swiper-wrapper">
-
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm ">
@@ -104,7 +102,7 @@
                                         HIỂU THÊM →</button>
                                 </div>
                             </article>
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm">
@@ -138,7 +136,7 @@
                                         HIỂU THÊM →</button>
                                 </div>
                             </article>
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm">
@@ -171,7 +169,7 @@
                                         HIỂU THÊM →</button>
                                 </div>
                             </article>
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm ">
@@ -206,7 +204,7 @@
                                         HIỂU THÊM →</button>
                                 </div>
                             </article>
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm">
@@ -240,7 +238,7 @@
                                         HIỂU THÊM →</button>
                                 </div>
                             </article>
-                            <article class="swiper-slide">
+                            <article class="swiper-slide col-3 ">
                                 <div
                                     class="service-item__content border-radius-5 gap-20 bg-white jus-sb flex flex-col pos-rel item-padding-30 fill-view center-ver center-hor">
                                     <div class="icon-box-sm">
@@ -275,6 +273,9 @@
                             </article>
                         </div>
                     </div>
+                    <div class="swiper-button-prev custom-prev-btn"></div>
+                    <div class="swiper-button-next custom-next-btn"></div>
+
                 </div>
         </section>
         <section class="container-f container-padding flex center-hor bg-achievement pos-rel">
@@ -289,8 +290,7 @@
                         quốc tế
                     </p>
                 </div>
-                <div
-                    class="bg-white achievement-stats-box border-radius-5 padding-20 flex flex-wrap jus-sb gap-20 center-ver">
+                <div class="bg-white achievement-stats-box border-radius-5 padding-20 flex flex-wrap gap-20 center-hor">
                     <div class="stat-item item-padding-40 col-4 flex flex-col center-hor center-ver gap-10">
                         <p class="stat-value bold">12</p>
                         <p class="stat-label uppercase">Năm thành lập</p>
@@ -323,14 +323,14 @@
                     <p class="text-center">Demo: chuyên cung cấp các hệ thống sân khấu, giàn truss, gian hàng triển
                         lãm...</p>
                 </div>
-                <div class="project-slider-wrapper pos-rel">
+                <div class="project-slider-wrapper pos-rel js-slider-wrapper">
 
                     <div class="swiper-button-prev custom-prev-btn"></div>
                     <div class="swiper-button-next custom-next-btn"></div>
 
-                    <div class="project-swiper fill-view swiper">
-                        <div class="swiper-wrapper">
-                            <article class="swiper-slide">
+                    <div class="project-swiper fill-view swiper js-slider-4cols">
+                        <div class="swiper-wrapper ">
+                            <article class="swiper-slide col-4">
                                 <div class="project-item bg-white flex flex-col pos-rel border-radius-5">
                                     <div class="project-item__img ">
                                         <img src="./img/news/news.jpg" alt="Project" class="img-content">
@@ -366,112 +366,112 @@
                         hộp đèn quảng cáo và giải pháp trưng
                         bày sáng tạo với công nghệ module, kỹ thuật cơ khí chính xác và tiêu chuẩn quốc tế</p>
                 </div>
-                <div class="logo-brand-wrapper pos-rel">
+                <div class="logo-brand-wrapper pos-rel js-slider-wrapper">
 
                     <div class="swiper-button-prev custom-prev-btn"></div>
                     <div class="swiper-button-next custom-next-btn"></div>
 
-                    <div class="logo-brand__swiper fill-view swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                    <div class="logo-brand__swiper fill-view swiper js-slider-logo">
+                        <div class="swiper-wrapper ">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/sapo.png" alt="sapo">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/viettiles.png" alt="viettiles">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/megamed.png" alt="megamed">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/samcovina.png" alt="samcovina">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/vinhgia.png" alt="vinhgia">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/office.png" alt="office">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/catuong.png" alt="catuong">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/vietmoney.png" alt="vietmoney">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/insee.png" alt="insee">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/generali.png" alt="generali">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/bambo.png" alt="bambo">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/apolat.png" alt="apolat">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/pops.png" alt="pops">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/toto.png" alt="toto">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
                                 </div>
                             </div>
 
-                            <div class="swiper-slide">
+                            <div class="swiper-slide col-5">
                                 <div class="logo-brand__item padding-10 pos-rel">
                                     <img class="img-content" src="./img/brand/vinamilk.png" alt="vinamilk">
                                     <a class="pos-abs cover-all" href="javascript:void(0)"></a>
@@ -490,12 +490,12 @@
                     <h2 class="section-title bold uppercase text-color-white">khách hàng ấn tượng gì về MPX</h2>
                     <div class="title-border-bottom"></div>
                 </div>
-                <div class="guest-comment__wrapper pos-rel">
+                <div class="guest-comment__wrapper pos-rel js-slider-wrapper">
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
-                    <div class="guest-comment__swiper fill-view swiper z-index-2">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                    <div class="guest-comment__swiper js-slider-3cols fill-view swiper z-index-2">
+                        <div class="swiper-wrapper ">
+                            <div class="swiper-slide col-3">
                                 <div
                                     class="guest-comment__item item-padding-20 border-radius-5 flex flex-col pos-rel bg-white gap-10">
                                     <div class="guest-comment__icon">
@@ -669,12 +669,16 @@
                     <h2 class="section-title bold uppercase text-color-white">Bài viết gần đây</h2>
                     <div class="title-border-bottom"></div>
                 </div>
-                <div class="news-slider-wrapper pos-rel">
-                    <div class="swiper-button-prev custom-prev-btn"></div>
-                    <div class="swiper-button-next custom-next-btn"></div>
-                    <div class="news-swiper fill-view swiper">
+                <div class="news-slider-wrapper pos-rel js-slider-wrapper">
+
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+
+                    <div class="news-swiper js-slider-4cols fill-view swiper">
+
                         <div class="swiper-wrapper">
-                            <article class="swiper-slide">
+
+                            <article class="swiper-slide col-4">
                                 <div class="news-item bg-white flex flex-col pos-rel border-radius-5 shadow-sm">
                                     <div class="news-item__img">
                                         <img src="./img/news/news.jpg" alt="Tin tức MPX" class="img-content">
@@ -693,11 +697,7 @@
                                         <h4 class="news-item__title clamp-text bold uppercase">Đổi Mới Vận Hành Sân Khấu
                                             – Khi Công Nghệ Gặp Nghệ Thuật</h4>
                                         <p class="news-item__desc clamp-text">
-                                            MPX ModuWall là hệ hộp đèn module kết nối – cho phép tạo thành vách tường
-                                            lớn booth triển lãm khu trưng bày ánh sáng bằng cách lắp ráp nhiều khung hộp
-                                            đèn lại với nhau. Tối ưu cho không gian branding quy mô lớn, dễ tháo lắp –
-                                            phù hợp với doanh nghiệp cần setup nhanh và thay đổi linh hoạt theo từng sự
-                                            kiện..
+                                            MPX ModuWall là hệ hộp đèn module kết nối...
                                         </p>
                                         <button
                                             class="news-btn btn-padding flex gap-5 center-hor center-ver text-color-white border-radius-5 cursor-point bg-primary uppercase flex gap-10 center-ver un-wrap">
@@ -708,8 +708,11 @@
                                     <a href="javascript:void(0)" class="pos-abs cover-all" aria-label="Xem tin tức"></a>
                                 </div>
                             </article>
+
                         </div>
                     </div>
+
+                    <div class="swiper-pagination"></div>
                 </div>
             </div>
         </section>
@@ -718,7 +721,8 @@
         data-include="./component/footer.html"></footer>
     <div class="btntotop__container pos-fixed bg-white" data-include="./component/rolltotop.html" id="btnToTop">
     </div>
-    <div class="popup-register__container pos-fixed z-index-2 center-ver center-hor container-f" data-include="./component/popup.html"></div>
+    <div class="popup-register__container pos-fixed z-index-2 center-ver center-hor container-f"
+        data-include="./component/popup.html"></div>
     <script defer type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script defer type="text/javascript"
         src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

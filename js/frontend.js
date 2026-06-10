@@ -364,61 +364,87 @@ function renderDynamicList(headingData, targetSelector) {
 }
 
 // 🧩 2️⃣ Hàm dùng chung cho tất cả Swiper
+// FUNCTION KHỞI TẠO SWIPER (PHIÊN BẢN CHỐNG ĐỤNG ĐỘ - XÀI MÃI MÃI)
 function initSwiperSlider({
   mainSelector,
+  wrapperSelector = null, // Thêm tham số này để khoanh vùng
   minSlides = 0,
   autoplay = false,
   spaceBetween = 0,
   slidesPerView = 1,
   loop = false,
-  navigation = {
-    nextEl: null,
-    prevEl: null
-  },
-  pagination = {
-    el: null,
-    clickable: true
-  },
+  navigation = { nextEl: null, prevEl: null },
+  pagination = { el: null, clickable: true },
   breakpoints = null,
   ...extraOptions
 }) {
-  const swiperContainer = document.querySelector(mainSelector);
-  if (!swiperContainer) {
-    // console.warn(`Swiper container not found for selector: ${mainSelector}`);
-    return;
-  }
-  if (loop && minSlides > 0) {
-    const wrapper = swiperContainer.querySelector('.swiper-wrapper');
-    if (wrapper) {
-      const slides = Array.from(wrapper.children);
-      let currentSlideCount = slides.length;
-      const requiredForLoop = slidesPerView > 1 ? slidesPerView * 2 : 3;
-      const actualMin = Math.max(minSlides, requiredForLoop);
+  // 1. Tìm tất cả các khối có chung class
+  const swiperContainers = document.querySelectorAll(mainSelector);
+  if (swiperContainers.length === 0) return;
 
-      if (currentSlideCount < actualMin) {
-        for (let i = 0; i < actualMin - currentSlideCount; i++) {
-          wrapper.appendChild(slides[i % currentSlideCount].cloneNode(true));
+  // 2. Lặp qua từng khối để set up ĐỘC LẬP
+  swiperContainers.forEach(swiperContainer => {
+    
+    // --- Tính năng Hack Loop của bồ ---
+    if (loop && minSlides > 0) {
+      const wrapper = swiperContainer.querySelector('.swiper-wrapper');
+      if (wrapper) {
+        const slides = Array.from(wrapper.children);
+        let currentSlideCount = slides.length;
+        const requiredForLoop = slidesPerView > 1 ? slidesPerView * 2 : 3;
+        const actualMin = Math.max(minSlides, requiredForLoop);
+
+        if (currentSlideCount > 0 && currentSlideCount < actualMin) {
+          const multiplier = Math.ceil(actualMin / currentSlideCount) - 1;
+          for (let i = 0; i < multiplier; i++) {
+            slides.forEach(slide => {
+              wrapper.appendChild(slide.cloneNode(true));
+            });
+          }
         }
       }
     }
-  }
 
-  const swiperOptions = {
-    slidesPerView: slidesPerView,
-    spaceBetween: spaceBetween,
-    loop: loop,
-    autoplay: autoplay ? {
-      delay: typeof autoplay === 'number' ? autoplay : 2500,
-      disableOnInteraction: false,
-      ...(typeof autoplay === 'object' ? autoplay : {})
-    } : false,
-    navigation: navigation.nextEl || navigation.prevEl ? navigation : false,
-    pagination: pagination.el ? pagination : false,
-    breakpoints: breakpoints,
-    ...extraOptions
-  };
+    // --- TÍNH NĂNG KHOANH VÙNG NÚT BẤM (CHỐNG LỖI) ---
+    // Tìm cái thẻ bọc ngoài cùng của riêng thằng slider này
+    const scopeElement = wrapperSelector ? swiperContainer.closest(wrapperSelector) : swiperContainer.parentElement;
 
-  new Swiper(swiperContainer, swiperOptions);
+    // Ép nó chỉ tìm nút Next/Prev NẰM TRONG scopeElement này
+    let scopedNav = false;
+    if (navigation && (navigation.nextEl || navigation.prevEl)) {
+      scopedNav = {
+        nextEl: scopeElement ? scopeElement.querySelector(navigation.nextEl) : navigation.nextEl,
+        prevEl: scopeElement ? scopeElement.querySelector(navigation.prevEl) : navigation.prevEl,
+      };
+    }
+
+    // Ép nó chỉ tìm Pagination NẰM TRONG scopeElement này
+    let scopedPag = false;
+    if (pagination && pagination.el) {
+      scopedPag = {
+        ...pagination,
+        el: scopeElement ? scopeElement.querySelector(pagination.el) : pagination.el,
+      };
+    }
+
+    // 3. Gọi Swiper với các nút đã được "đóng dấu chủ quyền"
+    const swiperOptions = {
+      slidesPerView: slidesPerView,
+      spaceBetween: spaceBetween,
+      loop: loop,
+      autoplay: autoplay ? {
+        delay: typeof autoplay === 'number' ? autoplay : 2500,
+        disableOnInteraction: false,
+        ...(typeof autoplay === 'object' ? autoplay : {})
+      } : false,
+      navigation: scopedNav, // Dùng nút đã khoanh vùng
+      pagination: scopedPag, // Dùng dot đã khoanh vùng
+      breakpoints: breakpoints,
+      ...extraOptions
+    };
+
+    new Swiper(swiperContainer, swiperOptions);
+  });
 }
 
 // js roll to top
@@ -512,352 +538,185 @@ function initFormValidation(root = document) {
 
 // js add active định vị ở menu
 function initUniversalActiveMenu(menuSelector = '', activeClassName = 'active') {
-    const currentUrl = window.location.href.split(/[?#]/)[0];
+  const currentUrl = window.location.href.split(/[?#]/)[0];
 
-    const menuLinks = document.querySelectorAll(`${menuSelector} a`);
-    let bestMatch = null;
-    let longestMatchLength = 0;
+  const menuLinks = document.querySelectorAll(`${menuSelector} a`);
+  let bestMatch = null;
+  let longestMatchLength = 0;
 
-    menuLinks.forEach(link => {
-        const hrefAttr = link.getAttribute('href');
-        if (!hrefAttr || hrefAttr.startsWith('#') || hrefAttr.startsWith('javascript')) return;
-        const linkUrl = link.href.split(/[?#]/)[0];
+  menuLinks.forEach(link => {
+    const hrefAttr = link.getAttribute('href');
+    if (!hrefAttr || hrefAttr.startsWith('#') || hrefAttr.startsWith('javascript')) return;
+    const linkUrl = link.href.split(/[?#]/)[0];
 
-        // ==========================================
-        // VŨ KHÍ MỚI: Bắt theo keyword từ data-match
-        // ==========================================
-        const matchKeyword = link.getAttribute('data-match');
-        if (matchKeyword && currentUrl.includes(matchKeyword)) {
-            bestMatch = link;
-            longestMatchLength = 9999; // Cấp quyền ưu tiên tuyệt đối, khỏi check mấy cái dưới
-            return;
-        }
+    // ==========================================
+    // VŨ KHÍ MỚI: Bắt theo keyword từ data-match
+    // ==========================================
+    const matchKeyword = link.getAttribute('data-match');
+    if (matchKeyword && currentUrl.includes(matchKeyword)) {
+      bestMatch = link;
+      longestMatchLength = 9999; // Cấp quyền ưu tiên tuyệt đối, khỏi check mấy cái dưới
+      return;
+    }
 
-        // Logic cũ (Vẫn giữ để chạy cho các trang bình thường không có data-match)
-        if (currentUrl === linkUrl) {
-            bestMatch = link;
-            longestMatchLength = linkUrl.length;
-        } else if (currentUrl.startsWith(linkUrl)) {
-            const isHomePage = linkUrl.endsWith('/') || linkUrl.endsWith('index.html') || linkUrl.endsWith('/en') || linkUrl.endsWith('/kn');
+    // Logic cũ (Vẫn giữ để chạy cho các trang bình thường không có data-match)
+    if (currentUrl === linkUrl) {
+      bestMatch = link;
+      longestMatchLength = linkUrl.length;
+    } else if (currentUrl.startsWith(linkUrl)) {
+      const isHomePage = linkUrl.endsWith('/') || linkUrl.endsWith('index.html') || linkUrl.endsWith('/en') || linkUrl.endsWith('/kn');
 
-            if (!isHomePage && linkUrl.length > longestMatchLength) {
-                bestMatch = link;
-                longestMatchLength = linkUrl.length;
-            }
-        }
+      if (!isHomePage && linkUrl.length > longestMatchLength) {
+        bestMatch = link;
+        longestMatchLength = linkUrl.length;
+      }
+    }
+  });
+
+  if (bestMatch) {
+    bestMatch.classList.add(activeClassName);
+    const parentMenu = bestMatch.closest(menuSelector);
+    if (parentMenu) parentMenu.classList.add(activeClassName);
+  } else {
+    const homeLink = Array.from(menuLinks).find(link => {
+      const lUrl = link.href.split(/[?#]/)[0];
+      return lUrl.endsWith('/') || lUrl.endsWith('index.html') || lUrl.endsWith('/en') || lUrl.endsWith('/kn');
     });
 
-    if (bestMatch) {
-        bestMatch.classList.add(activeClassName);
-        const parentMenu = bestMatch.closest(menuSelector);
-        if (parentMenu) parentMenu.classList.add(activeClassName);
-    } else {
-        const homeLink = Array.from(menuLinks).find(link => {
-            const lUrl = link.href.split(/[?#]/)[0];
-            return lUrl.endsWith('/') || lUrl.endsWith('index.html') || lUrl.endsWith('/en') || lUrl.endsWith('/kn');
-        });
-
-        if (homeLink) {
-            homeLink.classList.add(activeClassName);
-            const parentMenu = homeLink.closest(menuSelector);
-            if (parentMenu) parentMenu.classList.add(activeClassName);
-        }
+    if (homeLink) {
+      homeLink.classList.add(activeClassName);
+      const parentMenu = homeLink.closest(menuSelector);
+      if (parentMenu) parentMenu.classList.add(activeClassName);
     }
+  }
 }
 
 // ----------- Vùng gọi biến --------------
 document.addEventListener("DOMContentLoaded", () => {
   includeHTML(() => {
+    // 1. SLIDER BANNER (Hiện 1 ảnh to, tự động chạy)
     initSwiperSlider({
-      mainSelector: '.slide-container',
+      mainSelector: '.js-slider-banner', // Tên class dùng chung
+      wrapperSelector: '.js-slider-wrapper', // BẮT BUỘC có thẻ bọc ngoài chung class này
       minSlides: 3,
-      autoplay: { delay: 3000, disableOnInteraction: false },
-      loop: true,
       slidesPerView: 1,
       spaceBetween: 0,
-      navigation: {
-        nextEl: '.slide-container .swiper-button-next',
-        prevEl: '.slide-container .swiper-button-prev',
-      },
-      pagination: {
-        el: '.swiper-pagination.custom-dots', // Selector cho dots
-        clickable: true,
-      },
-    });
-
-    initSwiperSlider({
-      mainSelector: '.project-swiper',
-      slidesPerView: 3,
-      spaceBetween: 20,
       loop: true,
-      minSlides: 6,
-      autoplay: {
-        delay: 3000,
-      },
-      pagination: {
-        el: '.custom-dots',
-      },
-      navigation: {
-        nextEl: '.project-slider-wrapper .custom-next-btn',
-        prevEl: '.project-slider-wrapper .custom-prev-btn',
-      },
-      // Thêm Breakpoints responsive
-      breakpoints: {
-        320: {
-          slidesPerView: 1, // Điện thoại hiện 1
-          spaceBetween: 10
-        },
-
-        500: {
-          slidesPerView: 2, // Điện thoại hiện 1
-          spaceBetween: 10
-        },
-        768: {
-          slidesPerView: 3, // Tablet hiện 2
-          spaceBetween: 15
-        },
-        1024: {
-          slidesPerView: 4, // PC hiện 3
-          spaceBetween: 20
-        }
-      }
-    });
-
-    initSwiperSlider({
-      mainSelector: '.news-swiper',
-      slidesPerView: 3,
-      spaceBetween: 20,
-      loop: true,
-      minSlides: 6,
-      autoplay: {
-        delay: 3000,
-      },
-      pagination: {
-        el: '.custom-dots',
-      },
-      navigation: {
-        nextEl: '.news-slider-wrapper .custom-next-btn',
-        prevEl: '.news-slider-wrapper .custom-prev-btn',
-      },
-      // Thêm Breakpoints responsive
-      breakpoints: {
-        320: {
-          slidesPerView: 2, // Điện thoại hiện 1
-          spaceBetween: 10
-        },
-        768: {
-          slidesPerView: 3, // Tablet hiện 2
-          spaceBetween: 15
-        },
-        1024: {
-          slidesPerView: 4, // PC hiện 3
-          spaceBetween: 20
-        }
-      }
-    });
-
-    initSwiperSlider({
-      mainSelector: '.guest-comment__swiper',
-      minSlides: 8,
-      // autoplay: { delay: 3000, disableOnInteraction: false },
-      loop: true,
-      slidesPerView: 1,
-      spaceBetween: 20,
-      navigation: {
-        nextEl: '.guest-comment__wrapper .swiper-button-next',
-        prevEl: '.guest-comment__wrapper .swiper-button-prev',
-      },
-      pagination: {
-        el: '.custom-dots',
-        clickable: true,
-      },
-      breakpoints: {
-        1200: { slidesPerView: 3, spaceBetween: 20, },
-        900: { slidesPerView: 3, spaceBetween: 20, },
-        500: { slidesPerView: 2, spaceBetween: 20, },
-      },
-    });
-
-    initSwiperSlider({
-      mainSelector: '.service-list',
-      minSlides: 0,
-      loop: true,
-      slidesPerView: 1,
-      spaceBetween: 20,
-      grid: {
-        rows: 1,
-        fill: 'row'
-      },
-      navigation: {
-        nextEl: '.service-slider-wrapper .custom-next-btn',
-        prevEl: '.service-slider-wrapper .custom-prev-btn',
-      },
-      pagination: {
-        el: '.service-list .swiper-pagination',
-        clickable: true,
-      },
-      breakpoints: {
-        1200: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 2,
-            fill: 'row'
-          },
-        },
-        1000: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-        500: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-      },
-    });
-
-    initSwiperSlider({
-      mainSelector: '.service-intro__list',
-      minSlides: 0,
-      loop: true,
-      slidesPerView: 1,
-      spaceBetween: 20,
-      grid: {
-        rows: 1,
-        fill: 'row'
-      },
-      navigation: {
-        nextEl: '.process-slider-wrapper .custom-next-btn',
-        prevEl: '.process-slider-wrapper .custom-prev-btn',
-      },
-      pagination: {
-        el: '.service-list .swiper-pagination',
-        clickable: true,
-      },
-      breakpoints: {
-        1200: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 2,
-            fill: 'row'
-          },
-        },
-        1000: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-        500: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-      },
-    });
-
-    initSwiperSlider({
-      mainSelector: '.service-list',
-      minSlides: 0,
-      loop: true,
-      slidesPerView: 1,
-      spaceBetween: 20,
-      grid: {
-        rows: 1,
-        fill: 'row'
-      },
-      navigation: {
-        nextEl: '.intro-slider-wrapper .custom-next-btn',
-        prevEl: '.intro-slider-wrapper .custom-prev-btn',
-      },
-      pagination: {
-        el: '.service-list .swiper-pagination',
-        clickable: true,
-      },
-      breakpoints: {
-        1200: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 2,
-            fill: 'row'
-          },
-        },
-        1000: {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-        500: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-            fill: 'row'
-          },
-        },
-      },
-    });
-
-    initSwiperSlider({
-      mainSelector: '.logo-brand__swiper',
-      minSlides: 18,
       autoplay: { delay: 3000, disableOnInteraction: false },
-      loop: true,
-      slidesPerView: 1,
-      spaceBetween: 20,
-      grid: {
-        rows: 2,
-        fill: 'row'
-      },
       navigation: {
-        nextEl: '.logo-brand-wrapper .swiper-button-next',
-        prevEl: '.logo-brand-wrapper .swiper-button-prev',
+        nextEl: '.swiper-button-next', // Tự động tìm nút trong wrapper
+        prevEl: '.swiper-button-prev',
       },
       pagination: {
-        el: '.logo-brand__swiper .swiper-pagination',
+        el: '.swiper-pagination',
         clickable: true,
       },
+    });
+
+    // 2. SLIDER 3 CỘT (Dùng cho Dự án, Bình luận, Dịch vụ...)
+    initSwiperSlider({
+      mainSelector: '.js-slider-3cols',
+      wrapperSelector: '.js-slider-wrapper',
+      minSlides: 6,
+      loop: true,
+      autoplay: { delay: 3000, disableOnInteraction: false },
+      navigation: {
+        nextEl: '.swiper-button-next', // Tự động tìm nút trong wrapper
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: { el: '.custom-dots', clickable: true },
       breakpoints: {
-        1200: {
-          slidesPerView: 5,
-          grid: {
-            rows: 3,
-            fill: 'row'
-          },
+        320: { slidesPerView: 1, spaceBetween: 10 },
+        768: { slidesPerView: 2, spaceBetween: 15 },
+        1024: { slidesPerView: 3, spaceBetween: 20 }
+      }
+    });
+
+    // 3. SLIDER 4 CỘT (Dùng cho Tin tức, Sản phẩm...)
+    initSwiperSlider({
+      mainSelector: '.js-slider-4cols',
+      wrapperSelector: '.js-slider-wrapper',
+      minSlides: 6,
+      loop: true,
+      autoplay: { delay: 3000, disableOnInteraction: false },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination', // ĐÃ SỬA CHUẨN
+        clickable: true
+      },
+      breakpoints: {
+        320: { slidesPerView: 2, spaceBetween: 10 },
+        768: { slidesPerView: 3, spaceBetween: 15 },
+        1024: { slidesPerView: 4, spaceBetween: 20 }
+      }
+    });
+
+    // 4. SLIDER LOGO / THƯƠNG HIỆU (Dạng lưới Grid chia hàng)
+    initSwiperSlider({
+      mainSelector: '.js-slider-logo',
+      wrapperSelector: '.js-slider-wrapper',
+      minSlides: 18,
+      loop: true,
+      autoplay: { delay: 3000, disableOnInteraction: false },
+      navigation: {
+        nextEl: '.swiper-button-next', // Tự động tìm nút trong wrapper
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      breakpoints: {
+        500: {
+          slidesPerView: 2, spaceBetween: 20,
+          grid: { rows: 2, fill: 'row' }
         },
         900: {
-          slidesPerView: 4,
-          grid: {
-            rows: 2,
-            fill: 'row'
-          },
+          slidesPerView: 4, spaceBetween: 20,
+          grid: { rows: 2, fill: 'row' }
         },
-        500: {
-          slidesPerView: 2,
-          grid: {
-            rows: 2,
-            fill: 'row'
-          },
+        1200: {
+          slidesPerView: 5, spaceBetween: 20,
+          grid: { rows: 3, fill: 'row' }
         },
-      },
+      }
+    });
+
+    // 5. SLIDER lúc đầu là tỉnh khi xuống mobile thì thành slide
+
+    initSwiperSlider({
+      mainSelector: '.js-slider-grid-to-slide',
+      wrapperSelector: '.js-slider-wrapper',
+      minSlides: 6, // Tối thiểu 6 cái để lấp đầy 1 trang trên PC
+
+      // LƯU Ý TỬ HUYỆT: Swiper Grid KHÔNG hỗ trợ loop. Bắt buộc để false!
+      loop: false,
+      autoplay: false, // Dạng lưới nhiều món thì nên để khách tự bấm, đừng tự nhảy
+
+      navigation: { nextEl: '.custom-next-btn', prevEl: '.custom-prev-btn' },
+      pagination: { el: '.custom-dots', clickable: true },
+
+      // Thuật toán chuyển đổi thần thánh
+      breakpoints: {
+        320: {
+          slidesPerView: 2, // Mobile: Trượt ngang 2 sản phẩm
+          spaceBetween: 10,
+          grid: { rows: 1, fill: 'row' } // Trả về 1 hàng ngang
+        },
+        768: {
+          slidesPerView: 3, // Tablet: Trượt ngang 3 sản phẩm
+          spaceBetween: 15,
+          grid: { rows: 1, fill: 'row' } // Trả về 1 hàng ngang
+        },
+        1024: {
+          slidesPerView: 3, // PC: Chia 3 cột
+          spaceBetween: 20,
+          grid: {
+            rows: 2, // KẾT HỢP VỚI 3 CỘT = LƯỚI 6 SẢN PHẨM / TRANG
+            fill: 'row' // Ưu tiên xếp từ trái sang phải, rồi mới rớt dòng
+          }
+        }
+      }
     });
 
     initToggleSystem([
@@ -933,10 +792,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
       {
-        trigger: ".btn-hide",              
-        target: ".tab-panel__container",    
-        behavior: "toggle",                 
-        activeClass: "hide",                
+        trigger: ".btn-hide",
+        target: ".tab-panel__container",
+        behavior: "toggle",
+        activeClass: "hide",
         onActiveChange: function (isActive, triggerEl, targetEl) {
           if (isActive) {
             triggerEl.innerText = "Xem thêm";

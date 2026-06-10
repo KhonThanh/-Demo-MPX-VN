@@ -15,6 +15,9 @@
 .center-ver { align-items: center; }
 .container-padding { padding: 60px 0px; }
 .container-padding-bottom { padding: 0px 0px 60px; }
+.item-margin-bottom-10{ margin-bottom: 10px; }
+.item-margin-bottom-20{ margin-bottom: 20px; }
+.item-margin-bottom-30{ margin-bottom: 30px; }
 .item-padding-10 { padding: 10px; }
 .item-padding-20 { padding: 20px; }
 .item-padding-30 { padding: 30px; }
