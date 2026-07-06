@@ -384,7 +384,7 @@ function initSwiperSlider({
 
   // 2. Lặp qua từng khối để set up ĐỘC LẬP
   swiperContainers.forEach(swiperContainer => {
-    
+
     // --- Tính năng Hack Loop của bồ ---
     if (loop && minSlides > 0) {
       const wrapper = swiperContainer.querySelector('.swiper-wrapper');
@@ -589,6 +589,34 @@ function initUniversalActiveMenu(menuSelector = '', activeClassName = 'active') 
       if (parentMenu) parentMenu.classList.add(activeClassName);
     }
   }
+}
+
+function initStarRating(containerSelector = '.rate-stars', starSelector = '.star', activeClass = 'active') {
+  const containers = document.querySelectorAll(containerSelector);
+  if (!containers.length) return;
+  containers.forEach(container => {
+    const stars = Array.from(container.querySelectorAll(starSelector));
+    if (!stars.length) return;
+    const defaultActiveCount = container.querySelectorAll(`.${activeClass}`).length;
+    container.dataset.rating = defaultActiveCount || 0;
+    stars.forEach((star, index) => {
+      if (star.dataset._ratingBound === "true") return;
+      star.dataset._ratingBound = "true";
+      star.style.cursor = 'pointer';
+      star.addEventListener('click', () => {
+        const currentRating = index + 1;
+        container.dataset.rating = currentRating;
+        stars.forEach((s, i) => {
+          if (i < currentRating) {
+            s.classList.add(activeClass);
+          } else {
+            s.classList.remove(activeClass);
+          }
+        });
+
+      });
+    });
+  });
 }
 
 // ----------- Vùng gọi biến --------------
@@ -813,6 +841,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initRevealEffect();
     initFormValidation();
     initUniversalActiveMenu('.header-bottom__item', 'active')
+    initStarRating('.popup-comment__content .rate-stars', '.star', 'active');
+
   });
 });
 
