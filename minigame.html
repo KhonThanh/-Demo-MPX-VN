@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPX VN | mini game</title>
+    <link rel="icon" type="image/png" href="./img/logo/logo-favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="./img/banner/banner-home.webp">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <!-- <link rel="stylesheet" href="../css/style.min.css"> -->
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+    <link rel="stylesheet" href="./css/utility.css">
+    <link rel="stylesheet" href="./css/swiper-custom.css">
+</head>
+
+<body>
+    <header class="container-f bg-black" data-include="./component/header.html"></header>
+    <main class="container-f flex flex-col center-hor pos-rel">
+        <section id="stage-decorator-section" class="stage-decorator-wrapper">
+            <style>
+                /* Biến CSS cục bộ cho section */
+                #stage-decorator-section {
+                    --bg-main: #120f18;
+                    --bg-panel: #1a1625;
+                    --border-color: rgba(255, 255, 255, 0.1);
+                    --primary-glow: #8E7CEB;
+                    --text-main: #ffffff;
+                    --text-muted: #a09abc;
+                    font-family: inherit;
+                    background-color: var(--bg-main);
+                    color: var(--text-main);
+                    padding: 40px 20px;
+                    box-sizing: border-box;
+                    width: 100%;
+                }
+
+                #stage-decorator-section * {
+                    box-sizing: border-box;
+                }
+
+                .sd-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .sd-header {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .sd-title {
+                    font-size: 28px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    background: linear-gradient(135deg, #ffd700, #ff8f6b);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-bottom: 5px;
+                }
+
+                .sd-desc {
+                    font-size: 14px;
+                    color: var(--text-muted);
+                }
+
+                /* Layout 2 cột */
+                .sd-main-layout {
+                    display: flex;
+                    gap: 25px;
+                    align-items: flex-start;
+                }
+
+                @media (max-width: 900px) {
+                    .sd-main-layout {
+                        flex-direction: column;
+                    }
+                }
+
+                /* Cột trái: Khu vực sân khấu 3D */
+                .sd-stage-pane {
+                    width: 100%;
+                    background: radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%);
+                    border-radius: 16px;
+                    border: 1px solid var(--border-color);
+                    padding: 30px;
+                    min-height: 500px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    overflow: hidden;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+                    transition: background 0.4s ease;
+                }
+
+                /* Hiệu ứng phối cảnh Isometric cho sàn sân khấu */
+                .sd-stage-viewport {
+                    position: relative;
+                    width: 100%;
+                    height: 420px;
+                    perspective: 1200px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .cute-wrap {
+                    position: absolute;
+                    top: 10%;
+                    perspective: 647px;
+                    perspective-origin: 56% 83%;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                /* Khối không gian 3D chính */
+                .cube {
+                    margin: auto;
+                    position: relative;
+                    height: 200px;
+                    width: 200px;
+                    transform-style: preserve-3d;
+                    transform: scaleX(2.1) scaleY(1.4) scaleZ(1.2) rotateX(-4deg) rotateY(-17deg) rotateZ(-1deg) translateX(1px) translateY(-1px) translateZ(0px) skewX(-2deg) skewY(0deg);
+                }
+
+                /* Thiết lập chung cho sàn và tường bên trong khối */
+                .sd-stage-floor,
+                .sd-stage-wall {
+                    position: absolute;
+                    box-sizing: border-box;
+                    height: 100%;
+                    width: 100%;
+                    transition: all 0.3s ease;
+                    pointer-events: auto;
+                }
+
+                /* 1. Sân khấu chính (Sàn nhà - tương ứng mặt Bottom) */
+                .sd-stage-floor {
+                    transform: rotateX(270deg) translateY(100px);
+                    transform-origin: bottom center;
+                    background-color: #3d3248;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border-radius: 8px;
+                    box-shadow: -25px 35px 50px rgba(0, 0, 0, 0.7);
+                    background-image:
+                        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+                    background-size: 35px 35px;
+                }
+
+                /* Chữ tiêu đề trên sàn */
+                .sd-stage-floor::before {
+                    content: "SÂN KHẤU CHÍNH";
+                    position: absolute;
+                    top: 15px;
+                    left: 20px;
+                    font-size: 11px;
+                    letter-spacing: 2px;
+                    color: rgba(255, 255, 255, 0.3);
+                    pointer-events: none;
+                }
+
+                /* 2. Bức tường phía sau (Back Wall) */
+                .sd-wall-back {
+                    transform: rotateY(180deg) translateZ(100px);
+                    transform-origin: center center;
+                    background: linear-gradient(to bottom, rgba(61, 50, 72, 0.9), rgba(30, 25, 36, 0.95));
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    pointer-events: none;
+                }
+
+                /* 3. Bức tường bên trái (Side Wall - tương ứng mặt Left) */
+                .sd-wall-side {
+                    transform: rotateY(270deg) translateX(-100px);
+                    transform-origin: center left;
+                    background: linear-gradient(to bottom, rgba(61, 50, 72, 0.8), rgba(30, 25, 36, 0.9));
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    pointer-events: none;
+                }
+
+                @media screen and (max-width: 768px) {
+                    .cute-wrap {
+                        transform: scale(0.75);
+                        /* Thu nhỏ 75% cho tablet và mobile ngang */
+                    }
+                }
+
+                @media screen and (max-width: 480px) {
+                    .cute-wrap {
+                        transform: scale(0.55);
+                        /* Thu nhỏ 55% cho màn hình điện thoại dọc */
+                    }
+                }
+
+                /* Đèn được thả vào sân khấu */
+                .placed-item {
+                    position: absolute;
+                    width: 45px;
+                    height: 45px;
+                    cursor: grab;
+                    transform: translate(-50%, -50%) rotateZ(10deg) rotateX(-25deg);
+                    transition: transform 0.2s ease, filter 0.2s ease;
+                    z-index: 10;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .placed-item:active {
+                    cursor: grabbing;
+                }
+
+                .placed-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.6));
+                }
+
+                .placed-item:hover img {
+                    transform: scale(1.15);
+                    filter: drop-shadow(0 12px 8px rgba(255, 215, 0, 0.5));
+                }
+
+                /* Nút xóa item nhỏ trên đèn */
+                .delete-item-btn {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background: #ff4d4d;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    font-size: 10px;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+
+                .placed-item:hover .delete-item-btn {
+                    display: flex;
+                }
+
+                /* Cột phải: Sidebar điều khiển */
+                .sd-sidebar-pane {
+                    flex: 1;
+                    background-color: var(--bg-panel);
+                    border-radius: 16px;
+                    border: 1px solid var(--border-color);
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .sd-control-group h3 {
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    color: var(--text-muted);
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                /* Kho đèn */
+                .sd-items-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                }
+
+                .sd-item-card {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid var(--border-color);
+                    border-radius: 10px;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 6px;
+                    cursor: grab;
+                    transition: all 0.2s ease;
+                    user-select: none;
+                }
+
+                .sd-item-card:hover {
+                    background: rgba(142, 124, 235, 0.1);
+                    border-color: var(--primary-glow);
+                    transform: translateY(-2px);
+                }
+
+                .sd-item-card img {
+                    width: 32px;
+                    height: 32px;
+                    object-fit: contain;
+                }
+
+                .sd-item-card span {
+                    font-size: 12px;
+                    text-align: center;
+                }
+
+                /* Bảng chọn màu (Swatches) */
+                .sd-color-swatches {
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+
+                .sd-color-btn {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 6px;
+                    border: 2px solid transparent;
+                    cursor: pointer;
+                    transition: transform 0.2s ease, border-color 0.2s ease;
+                }
+
+                .sd-color-btn:hover {
+                    transform: scale(1.1);
+                }
+
+                .sd-color-btn.active {
+                    border-color: #ffffff;
+                    transform: scale(1.1);
+                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+                }
+
+                /* Thống kê & Quản lý */
+                .sd-stats-box {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 13px;
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 10px 14px;
+                    border-radius: 8px;
+                }
+
+                .sd-btn-danger {
+                    background-color: rgba(255, 77, 77, 0.15);
+                    color: #ff4d4d;
+                    border: 1px solid rgba(255, 77, 77, 0.3);
+                    padding: 10px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    width: 100%;
+                    transition: background 0.2s ease;
+                }
+
+                .sd-btn-danger:hover {
+                    background-color: #ff4d4d;
+                    color: #ffffff;
+                }
+
+                /* --- CẤU TRÚC VÙNG SÂN KHẤU MỚI --- */
+                .sd-stage-floor {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    padding: 15px;
+                }
+
+                /* Vùng phía trên: Chia thành 4 div */
+                .sd-upper-zone {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 10px;
+                    width: 100%;
+                    height: 45%;
+                }
+
+                .sd-zone-box {
+                    background-color: var(--zone-color, rgba(100, 180, 255, 0.2));
+                    border: 1px dashed rgba(255, 255, 255, 0.2);
+                    border-radius: 8px;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: background 0.3s ease;
+                }
+
+                /* Div chứa banner ở tầng trên */
+                .sd-zone-box.banner-box {
+                    background-image: var(--banner-bg, none);
+                    background-size: cover;
+                    background-position: center;
+                }
+
+                .sd-banner-content {
+                    font-size: 10px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    color: rgba(255, 255, 255, 0.7);
+                    text-transform: uppercase;
+                }
+
+                /* Vùng phía dưới: Chia thành 2 div */
+                .sd-lower-zone {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                    width: 100%;
+                    height: 45%;
+                }
+
+                .sd-lower-box {
+                    background-color: var(--lower-color, rgba(50, 100, 200, 0.2));
+                    border: 1px dashed rgba(255, 255, 255, 0.2);
+                    border-radius: 8px;
+                    position: relative;
+                    background-size: cover;
+                    background-position: center;
+                }
+            </style>
+
+            <div class="sd-container">
+                <!-- Tiêu đề -->
+                <div class="sd-header">
+                    <h2 class="sd-title">✨ Stage Decorator Studio ✨</h2>
+                    <p class="sd-desc">Kéo thả đèn vào sân khấu 3D • Tùy chỉnh màu sàn & nền không gian theo ý muốn</p>
+                </div>
+
+                <!-- Layout chính -->
+                <div class="sd-main-layout">
+
+                    <!-- Sân khấu chính (Cột trái) -->
+                    <div class="sd-stage-pane" id="outerPane">
+                        <div class="sd-stage-viewport">
+                            <div class="cute-wrap">
+                                <div class="cube">
+                                    <div class="sd-stage-floor" id="stageFloor" ondragover="allowDrop(event)"
+                                        ondrop="dropItem(event)">
+                                    </div>
+                                    <div class="sd-stage-wall sd-wall-back"></div>
+                                    <div class="sd-stage-wall sd-wall-side"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng điều khiển (Cột phải) -->
+                    <div class="sd-sidebar-pane">
+
+                        <!-- Kho thiết bị đèn -->
+                        <div class="sd-control-group">
+                            <h3>💡 Kho Đèn Sân Khấu</h3>
+                            <div class="sd-items-grid">
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="spotlight"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/3014/3014185.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/3014/3014185.png" alt="Spotlight">
+                                    <span>Spotlight</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="ledbar"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/2821/2821808.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/2821/2821808.png" alt="LED Bar">
+                                    <span>LED Bar</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="parcan"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/1187/1187532.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/1187/1187532.png" alt="PAR Can">
+                                    <span>PAR Can</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="moving" data-img="https://cdn-icons-png.flaticon.com/512/931/931949.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/931/931949.png" alt="Moving Head">
+                                    <span>Moving Head</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Đổi màu sàn -->
+                        <div class="sd-control-group">
+                            <h3>🪵 Màu Sàn Sân Khấu</h3>
+                            <div class="sd-color-swatches" id="floorColors">
+                                <div class="sd-color-btn active" style="background-color: #3d3248;"
+                                    onclick="changeFloorColor('#3d3248', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #5c3a21;"
+                                    onclick="changeFloorColor('#5c3a21', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #1a3a4b;"
+                                    onclick="changeFloorColor('#1a3a4b', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #2b2b2b;"
+                                    onclick="changeFloorColor('#2b2b2b', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #4b1a33;"
+                                    onclick="changeFloorColor('#4b1a33', this)"></div>
+                            </div>
+                        </div>
+
+                        <!-- Đổi màu nền ngoài -->
+                        <div class="sd-control-group">
+                            <h3>🌌 Nền Không Gian Ngoài</h3>
+                            <div class="sd-color-swatches" id="outerColors">
+                                <div class="sd-color-btn active"
+                                    style="background: radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #1b2a4a 0%, #080f1a 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #1b2a4a 0%, #080f1a 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #4a1b1b 0%, #1a0808 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #4a1b1b 0%, #1a0808 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #1b4a2e 0%, #081a0e 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #1b4a2e 0%, #081a0e 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn" style="background: #000000;"
+                                    onclick="changeOuterBg('#000000', this)"></div>
+                            </div>
+                        </div>
+
+                        <!-- Quản lý -->
+                        <div class="sd-control-group">
+                            <h3>⚙️ Quản Lý Sân Khấu</h3>
+                            <div class="sd-stats-box">
+                                <span>Đèn trên sân khấu:</span>
+                                <strong id="itemCount">0 cây</strong>
+                            </div>
+                        </div>
+
+                        <button class="sd-btn-danger" onclick="clearAllItems()">Xóa tất cả đèn</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                let draggedData = null;
+
+                // Xử lý kéo từ kho
+                function dragStart(e) {
+                    draggedData = {
+                        type: e.target.getAttribute('data-type') || e.target.closest('.sd-item-card').getAttribute('data-type'),
+                        img: e.target.getAttribute('data-img') || e.target.closest('.sd-item-card').getAttribute('data-img')
+                    };
+                }
+
+                function allowDrop(e) {
+                    e.preventDefault();
+                }
+
+                // Xử lý thả vào sàn sân khấu
+                function dropItem(e) {
+                    e.preventDefault();
+                    if (!draggedData) return;
+
+                    const floor = document.getElementById('stageFloor');
+                    const rect = floor.getBoundingClientRect();
+
+                    // Tính toán tọa độ tương đối khi thả chuột lên mặt sàn isometric
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // Giới hạn trong khung sàn
+                    if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                        createPlacedItem(draggedData.img, x, y);
+                        updateCount();
+                    }
+                    draggedData = null;
+                }
+
+                // Tạo phần tử đèn trên sàn
+                function createPlacedItem(imgSrc, x, y) {
+                    const floor = document.getElementById('stageFloor');
+
+                    const item = document.createElement('div');
+                    item.className = 'placed-item';
+                    item.style.left = `${x}px`;
+                    item.style.top = `${y}px`;
+
+                    item.innerHTML = `
+        <img src="${imgSrc}" alt="Stage Light">
+        <button class="delete-item-btn" onclick="removeItem(this)">×</button>
+      `;
+
+                    // Hỗ trợ tính năng kéo di chuyển lại vị trí sau khi đã thả lên sàn
+                    item.onmousedown = function (event) {
+                        if (event.target.tagName === 'BUTTON') return; // Bỏ qua nút xóa
+                        event.stopPropagation();
+
+                        const shiftX = event.clientX - item.getBoundingClientRect().left;
+                        const shiftY = event.clientY - item.getBoundingClientRect().top;
+
+                        function moveAt(pageX, pageY) {
+                            const floorRect = floor.getBoundingClientRect();
+                            let newX = pageX - floorRect.left - shiftX;
+                            let newY = pageY - floorRect.top - shiftY;
+
+                            item.style.left = `${newX}px`;
+                            item.style.top = `${newY}px`;
+                        }
+
+                        function onMouseMove(event) {
+                            moveAt(event.clientX, event.clientY);
+                        }
+
+                        document.addEventListener('mousemove', onMouseMove);
+
+                        document.onmouseup = function () {
+                            document.removeEventListener('mousemove', onMouseMove);
+                            document.onmouseup = null;
+                        };
+                    };
+
+                    floor.appendChild(item);
+                }
+
+                // Xóa từng đèn riêng lẻ
+                function removeItem(btn) {
+                    btn.closest('.placed-item').remove();
+                    updateCount();
+                }
+
+                // Xóa tất cả đèn
+                function clearAllItems() {
+                    const floor = document.getElementById('stageFloor');
+                    // Giữ lại phần tử nền, chỉ xóa các item đèn
+                    const items = floor.querySelectorAll('.placed-item');
+                    items.forEach(item => item.remove());
+                    updateCount();
+                }
+
+                // Cập nhật số lượng đếm
+                function updateCount() {
+                    const count = document.querySelectorAll('#stageFloor .placed-item').length;
+                    document.getElementById('itemCount').innerText = count + ' cây';
+                }
+
+                // Đổi màu sàn
+                function changeFloorColor(color, btn) {
+                    document.getElementById('stageFloor').style.backgroundColor = color;
+
+                    // Active state button
+                    const parent = document.getElementById('floorColors');
+                    parent.querySelectorAll('.sd-color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+
+                // Đổi màu nền ngoài
+                function changeOuterBg(bgStyle, btn) {
+                    document.getElementById('outerPane').style.background = bgStyle;
+
+                    // Active state button
+                    const parent = document.getElementById('outerColors');
+                    parent.querySelectorAll('.sd-color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            </script>
+        </section>
+        <!-- <section id="stage-decorator-section" class="stage-decorator-wrapper">
+            <style>
+                #stage-decorator-section {
+                    --bg-main: #120f18;
+                    --bg-panel: #1a1625;
+                    --border-color: rgba(255, 255, 255, 0.1);
+                    --primary-glow: #8E7CEB;
+                    --text-main: #ffffff;
+                    --text-muted: #a09abc;
+                    font-family: inherit;
+                    background-color: var(--bg-main);
+                    color: var(--text-main);
+                    padding: 40px 20px;
+                    box-sizing: border-box;
+                    width: 100%;
+                }
+
+                #stage-decorator-section * {
+                    box-sizing: border-box;
+                }
+
+                .sd-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .sd-header {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .sd-title {
+                    font-size: 28px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    background: linear-gradient(135deg, #ffd700, #ff8f6b);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-bottom: 5px;
+                }
+
+                .sd-desc {
+                    font-size: 14px;
+                    color: var(--text-muted);
+                }
+
+                .sd-main-layout {
+                    display: flex;
+                    gap: 25px;
+                    align-items: flex-start;
+                }
+
+                @media (max-width: 900px) {
+                    .sd-main-layout {
+                        flex-direction: column;
+                    }
+                }
+
+                .sd-stage-pane {
+                    flex: 2;
+                    background: radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%);
+                    border-radius: 16px;
+                    border: 1px solid var(--border-color);
+                    padding: 30px;
+                    min-height: 500px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    overflow: hidden;
+                    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+                    transition: background 0.4s ease;
+                }
+
+                .sd-stage-viewport {
+                    width: 100%;
+                    height: 420px;
+                    perspective: 1200px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .sd-stage-floor {
+                    width: 80%;
+                    height: 75%;
+                    background-color: #3d3248;
+                    transform-style: preserve-3d;
+                    transform: rotateX(25deg) rotateZ(-10deg) skewX(10deg);
+                    border-radius: 12px;
+                    box-shadow: -25px 35px 50px rgba(0, 0, 0, 0.7);
+                    position: relative;
+                    transition: background-color 0.3s ease;
+                    background-image:
+                        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+                    background-size: 35px 35px;
+                }
+
+                .sd-stage-floor::before {
+                    content: "SÂN KHẤU CHÍNH";
+                    position: absolute;
+                    top: 15px;
+                    left: 20px;
+                    font-size: 11px;
+                    letter-spacing: 2px;
+                    color: rgba(255, 255, 255, 0.3);
+                    transform: skewX(-10deg) rotateZ(10deg) rotateX(-25deg);
+                    pointer-events: none;
+                }
+
+                .placed-item {
+                    position: absolute;
+                    width: 45px;
+                    height: 45px;
+                    cursor: grab;
+                    transform: translate(-50%, -50%) rotateZ(10deg) rotateX(-25deg);
+                    transition: transform 0.2s ease, filter 0.2s ease;
+                    z-index: 10;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .placed-item:active {
+                    cursor: grabbing;
+                }
+
+                .placed-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.6));
+                }
+
+                .placed-item:hover img {
+                    transform: scale(1.15);
+                    filter: drop-shadow(0 12px 8px rgba(255, 215, 0, 0.5));
+                }
+
+                .delete-item-btn {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background: #ff4d4d;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 18px;
+                    height: 18px;
+                    font-size: 10px;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+
+                .placed-item:hover .delete-item-btn {
+                    display: flex;
+                }
+
+                .sd-sidebar-pane {
+                    flex: 1;
+                    background-color: var(--bg-panel);
+                    border-radius: 16px;
+                    border: 1px solid var(--border-color);
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .sd-control-group h3 {
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    color: var(--text-muted);
+                    margin-bottom: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .sd-items-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                }
+
+                .sd-item-card {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid var(--border-color);
+                    border-radius: 10px;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 6px;
+                    cursor: grab;
+                    transition: all 0.2s ease;
+                    user-select: none;
+                }
+
+                .sd-item-card:hover {
+                    background: rgba(142, 124, 235, 0.1);
+                    border-color: var(--primary-glow);
+                    transform: translateY(-2px);
+                }
+
+                .sd-item-card img {
+                    width: 32px;
+                    height: 32px;
+                    object-fit: contain;
+                }
+
+                .sd-item-card span {
+                    font-size: 12px;
+                    text-align: center;
+                }
+
+                .sd-color-swatches {
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+
+                .sd-color-btn {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 6px;
+                    border: 2px solid transparent;
+                    cursor: pointer;
+                    transition: transform 0.2s ease, border-color 0.2s ease;
+                }
+
+                .sd-color-btn:hover {
+                    transform: scale(1.1);
+                }
+
+                .sd-color-btn.active {
+                    border-color: #ffffff;
+                    transform: scale(1.1);
+                    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+                }
+
+                .sd-stats-box {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 13px;
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 10px 14px;
+                    border-radius: 8px;
+                }
+
+                .sd-btn-danger {
+                    background-color: rgba(255, 77, 77, 0.15);
+                    color: #ff4d4d;
+                    border: 1px solid rgba(255, 77, 77, 0.3);
+                    padding: 10px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    width: 100%;
+                    transition: background 0.2s ease;
+                }
+
+                .sd-btn-danger:hover {
+                    background-color: #ff4d4d;
+                    color: #ffffff;
+                }
+            </style>
+
+            <div class="sd-container">
+                <div class="sd-header">
+                    <h2 class="sd-title">✨ Stage Decorator Studio ✨</h2>
+                    <p class="sd-desc">Kéo thả đèn vào sân khấu 3D • Tùy chỉnh màu sàn & nền không gian theo ý muốn</p>
+                </div>
+
+                <div class="sd-main-layout">
+
+                    <div class="sd-stage-pane" id="outerPane">
+                        <div class="sd-stage-viewport">
+                            <div class="sd-stage-floor" id="stageFloor" ondragover="allowDrop(event)"
+                                ondrop="dropItem(event)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sd-sidebar-pane">
+
+                        <div class="sd-control-group">
+                            <h3>💡 Kho Đèn Sân Khấu</h3>
+                            <div class="sd-items-grid">
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="spotlight"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/3014/3014185.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/3014/3014185.png" alt="Spotlight">
+                                    <span>Spotlight</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="ledbar"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/2821/2821808.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/2821/2821808.png" alt="LED Bar">
+                                    <span>LED Bar</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="parcan"
+                                    data-img="https://cdn-icons-png.flaticon.com/512/1187/1187532.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/1187/1187532.png" alt="PAR Can">
+                                    <span>PAR Can</span>
+                                </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="moving" data-img="https://cdn-icons-png.flaticon.com/512/931/931949.png">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/931/931949.png" alt="Moving Head">
+                                    <span>Moving Head</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sd-control-group">
+                            <h3>🪵 Màu Sàn Sân Khấu</h3>
+                            <div class="sd-color-swatches" id="floorColors">
+                                <div class="sd-color-btn active" style="background-color: #3d3248;"
+                                    onclick="changeFloorColor('#3d3248', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #5c3a21;"
+                                    onclick="changeFloorColor('#5c3a21', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #1a3a4b;"
+                                    onclick="changeFloorColor('#1a3a4b', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #2b2b2b;"
+                                    onclick="changeFloorColor('#2b2b2b', this)"></div>
+                                <div class="sd-color-btn" style="background-color: #4b1a33;"
+                                    onclick="changeFloorColor('#4b1a33', this)"></div>
+                            </div>
+                        </div>
+
+                        <div class="sd-control-group">
+                            <h3>🌌 Nền Không Gian Ngoài</h3>
+                            <div class="sd-color-swatches" id="outerColors">
+                                <div class="sd-color-btn active"
+                                    style="background: radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #1b2a4a 0%, #080f1a 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #1b2a4a 0%, #080f1a 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #4a1b1b 0%, #1a0808 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #4a1b1b 0%, #1a0808 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn"
+                                    style="background: radial-gradient(circle at center, #1b4a2e 0%, #081a0e 100%);"
+                                    onclick="changeOuterBg('radial-gradient(circle at center, #1b4a2e 0%, #081a0e 100%)', this)">
+                                </div>
+                                <div class="sd-color-btn" style="background: #000000;"
+                                    onclick="changeOuterBg('#000000', this)"></div>
+                            </div>
+                        </div>
+
+                        <div class="sd-control-group">
+                            <h3>⚙️ Quản Lý Sân Khấu</h3>
+                            <div class="sd-stats-box">
+                                <span>Đèn trên sân khấu:</span>
+                                <strong id="itemCount">0 cây</strong>
+                            </div>
+                        </div>
+
+                        <button class="sd-btn-danger" onclick="clearAllItems()">Xóa tất cả đèn</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                let draggedData = null;
+
+                function dragStart(e) {
+                    draggedData = {
+                        type: e.target.getAttribute('data-type') || e.target.closest('.sd-item-card').getAttribute('data-type'),
+                        img: e.target.getAttribute('data-img') || e.target.closest('.sd-item-card').getAttribute('data-img')
+                    };
+                }
+
+                function allowDrop(e) {
+                    e.preventDefault();
+                }
+
+                function dropItem(e) {
+                    e.preventDefault();
+                    if (!draggedData) return;
+
+                    const floor = document.getElementById('stageFloor');
+                    const rect = floor.getBoundingClientRect();
+
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                        createPlacedItem(draggedData.img, x, y);
+                        updateCount();
+                    }
+                    draggedData = null;
+                }
+
+                function createPlacedItem(imgSrc, x, y) {
+                    const floor = document.getElementById('stageFloor');
+
+                    const item = document.createElement('div');
+                    item.className = 'placed-item';
+                    item.style.left = `${x}px`;
+                    item.style.top = `${y}px`;
+
+                    item.innerHTML = `
+        <img src="${imgSrc}" alt="Stage Light">
+        <button class="delete-item-btn" onclick="removeItem(this)">×</button>
+      `;
+
+                    item.onmousedown = function (event) {
+                        if (event.target.tagName === 'BUTTON') return; 
+                        event.stopPropagation();
+
+                        const shiftX = event.clientX - item.getBoundingClientRect().left;
+                        const shiftY = event.clientY - item.getBoundingClientRect().top;
+
+                        function moveAt(pageX, pageY) {
+                            const floorRect = floor.getBoundingClientRect();
+                            let newX = pageX - floorRect.left - shiftX;
+                            let newY = pageY - floorRect.top - shiftY;
+
+                            item.style.left = `${newX}px`;
+                            item.style.top = `${newY}px`;
+                        }
+
+                        function onMouseMove(event) {
+                            moveAt(event.clientX, event.clientY);
+                        }
+
+                        document.addEventListener('mousemove', onMouseMove);
+
+                        document.onmouseup = function () {
+                            document.removeEventListener('mousemove', onMouseMove);
+                            document.onmouseup = null;
+                        };
+                    };
+
+                    floor.appendChild(item);
+                }
+
+                function removeItem(btn) {
+                    btn.closest('.placed-item').remove();
+                    updateCount();
+                }
+
+                function clearAllItems() {
+                    const floor = document.getElementById('stageFloor');
+                    const items = floor.querySelectorAll('.placed-item');
+                    items.forEach(item => item.remove());
+                    updateCount();
+                }
+
+                function updateCount() {
+                    const count = document.querySelectorAll('#stageFloor .placed-item').length;
+                    document.getElementById('itemCount').innerText = count + ' cây';
+                }
+
+                function changeFloorColor(color, btn) {
+                    document.getElementById('stageFloor').style.backgroundColor = color;
+
+                    const parent = document.getElementById('floorColors');
+                    parent.querySelectorAll('.sd-color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+
+                function changeOuterBg(bgStyle, btn) {
+                    document.getElementById('outerPane').style.background = bgStyle;
+
+                    const parent = document.getElementById('outerColors');
+                    parent.querySelectorAll('.sd-color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            </script>
+        </section> -->
+    </main>
+    <footer class="container-f bg-black center-ver flex flex-col item-padding-80-0 gap-30"
+        data-include="./component/footer.html"></footer>
+    <div class="btntotop__container pos-fixed bg-white" data-include="./component/rolltotop.html" id="btnToTop">
+    </div>
+    <div class="popup-register__container pos-fixed z-index-2 center-ver center-hor container-f"
+        data-include="./component/popup.html"></div>
+    <script defer type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script defer type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer type="text/javascript" src="./js/frontend.js"></script>
+</body>
+
+</html>
