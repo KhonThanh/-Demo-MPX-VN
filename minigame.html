@@ -97,10 +97,6 @@
                     align-items: center;
                     justify-content: center;
                     position: relative;
-                    /* FIX QUAN TRỌNG: Bỏ overflow:hidden — đây là thủ phạm chính!
-                       overflow:hidden clip pointer-events theo bounding box 2D của container,
-                       nên phần sàn 3D bị chiếu ra ngoài box này sẽ mất hover hoàn toàn (~3x5 ô).
-                       Thay bằng clip-path để giữ visual nhưng KHÔNG clip pointer-events. */
                     overflow: visible;
                     clip-path: inset(0 round 16px);
                     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
@@ -174,30 +170,19 @@
                 }
 
                 .sd-stage-floor {
-                    position: absolute;
                     width: 100%;
                     height: 100%;
                     pointer-events: auto !important;
-
-                    /* FIX: Tách transform thành 2 bước để pointer-events nhận đúng toàn bộ diện tích */
                     transform: rotateX(270deg) translateY(100px);
                     transform-origin: bottom center;
                     transform-style: preserve-3d;
                     background-color: transparent;
                     box-shadow: -25px 35px 50px rgba(0, 0, 0, 0.7);
-
-                    /* Dùng position:relative cho children thay vì grid để tránh pointer-events bị clip */
                     position: absolute;
                     padding: 0 !important;
                     gap: 0 !important;
-
-                    /* Grid border rõ hơn thay vì background fill */
-                    background-image:
-                        linear-gradient(to right, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
                     background-size: calc(100% / 6) calc(100% / 6);
-                    /* Viền ngoài cùng */
-                    outline: 1px solid rgba(255, 255, 255, 0.25);
+                    outline: 1px solid rgba(243, 239, 239, 0.25);
                     z-index: 10;
                 }
 
@@ -284,7 +269,6 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    /* FIX: Không chặn pointer-events của cell grid bên dưới khi hover vùng trống */
                     pointer-events: auto;
                 }
 
@@ -787,28 +771,15 @@
                     }
                 }
 
-                // ============================================================
-                // HỆ THỐNG MỚI: map chuột 2D → cell 3D qua inverse bilinear
-                // Lý do: CSS pointer-events KHÔNG reliable trong 3D transform chain
-                // (2 perspective lồng + preserve-3d + scale + rotate).
-                // Giải pháp: overlay trong suốt nằm NGOÀI 3D bắt mọi event,
-                // sau đó tính 4 góc sàn trên màn hình bằng getBoundingClientRect
-                // của các corner elements, rồi inverse-bilinear map về (u,v) → col/row.
-                // ============================================================
-
+              
                 const COLS = 6, ROWS = 6;
                 let dragPayload = null;       // lưu data khi drag
                 let hoveredCell = null;       // { col, row } đang hover
 
-                // -- Lấy 4 góc sàn trên màn hình --
-                // Dùng 4 div marker ở 4 góc stageFloor để getClientBoundingRect
+            
                 function getFloorCorners() {
                     const floor = document.getElementById('stageFloor');
                     if (!floor) return null;
-
-                    // Lấy bounding rect của 4 điểm: top-left, top-right, bottom-left, bottom-right
-                    // thông qua element::before trick không được, dùng cách khác:
-                    // Tạo 4 div con tạm, đặt ở 4 góc, lấy getBoundingClientRect
                     const markers = floor.querySelectorAll('.floor-corner-marker');
                     if (markers.length < 4) return null;
 
@@ -820,8 +791,6 @@
                     };
                 }
 
-                // -- Inverse bilinear interpolation --
-                // Cho điểm P trên quadrilateral (tl, tr, bl, br), tính (u, v) trong [0,1]
                 function inverseBilinear(px, py, tl, tr, bl, br) {
                     // Giải hệ phương trình phi tuyến bằng Newton iteration
                     let u = 0.5, v = 0.5;
