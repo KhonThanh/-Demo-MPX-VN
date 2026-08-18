@@ -87,7 +87,7 @@
 
                 /* --- KHU VỰC SÂN KHẤU 3D --- */
                 .sd-stage-pane {
-                    width: 70%;
+                    width: 100%;
                     background: radial-gradient(circle at center, #2a2238 0%, #0d0a12 100%);
                     border-radius: 16px;
                     border: 1px solid var(--border-color);
@@ -97,6 +97,10 @@
                     align-items: center;
                     justify-content: center;
                     position: relative;
+                    /* FIX QUAN TRỌNG: Bỏ overflow:hidden — đây là thủ phạm chính!
+                       overflow:hidden clip pointer-events theo bounding box 2D của container,
+                       nên phần sàn 3D bị chiếu ra ngoài box này sẽ mất hover hoàn toàn (~3x5 ô).
+                       Thay bằng clip-path để giữ visual nhưng KHÔNG clip pointer-events. */
                     overflow: visible;
                     clip-path: inset(0 round 16px);
                     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
@@ -170,19 +174,25 @@
                 }
 
                 .sd-stage-floor {
+                    position: absolute;
                     width: 100%;
                     height: 100%;
                     pointer-events: auto !important;
+
+                    /* FIX: Tách transform thành 2 bước để pointer-events nhận đúng toàn bộ diện tích */
                     transform: rotateX(270deg) translateY(100px);
                     transform-origin: bottom center;
                     transform-style: preserve-3d;
                     background-color: transparent;
                     box-shadow: -25px 35px 50px rgba(0, 0, 0, 0.7);
+
                     position: absolute;
                     padding: 0 !important;
                     gap: 0 !important;
-                    background-size: calc(100% / 6) calc(100% / 6);
-                    outline: 1px solid rgba(243, 239, 239, 0.25);
+
+                    /* KHÔNG dùng CSS grid nữa — canvas vẽ grid + highlight cùng 1 hệ tọa độ */
+                    background-image: none;
+                    outline: none;
                     z-index: 10;
                 }
 
@@ -260,11 +270,12 @@
                 /* Đèn được thả vào sân khấu */
                 .placed-item {
                     position: absolute;
-                    width: 45px;
-                    height: 45px;
+                    width: 52px;
+                    height: 52px;
                     cursor: grab;
-                    transform: translate(-50%, -50%) rotateZ(10deg) rotateX(-25deg);
-                    transition: transform 0.2s ease, filter 0.2s ease;
+                    transform: translate(-66%, -23%) rotateY(17deg) rotateX(107deg) scaleY(0.9);
+                    transform-style: preserve-3d;
+                    transition: filter 0.2s ease;
                     z-index: 20;
                     display: flex;
                     align-items: center;
@@ -280,12 +291,13 @@
                     width: 100%;
                     height: 100%;
                     object-fit: contain;
-                    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.6));
+                    filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.7));
+                    transition: transform 0.2s ease, filter 0.2s ease;
                 }
 
                 .placed-item:hover img {
-                    transform: scale(1.15);
-                    filter: drop-shadow(0 12px 8px rgba(255, 215, 0, 0.5));
+                    transform: scale(1.18);
+                    filter: drop-shadow(0 14px 10px rgba(255, 215, 0, 0.55));
                 }
 
                 .delete-item-btn {
@@ -602,6 +614,11 @@
                                     <img src="https://cdn-icons-png.flaticon.com/512/931/931949.png" alt="Moving Head">
                                     <span>Moving Head</span>
                                 </div>
+                                <div class="sd-item-card" draggable="true" ondragstart="dragStart(event)"
+                                    data-type="moving" data-img="./img/item-logo.svg">
+                                    <img src="./img/item-logo.svg" alt="Moving Head">
+                                    <span>demo item</span>
+                                </div>
                             </div>
                         </div>
 
@@ -735,9 +752,14 @@
 
                     targets.forEach(target => {
                         if (type === 'color') {
-                            // Xóa background-image (gradient cũ) và gán màu mới từ bảng màu hoặc color picker
-                            target.style.backgroundImage = 'none';
-                            target.style.backgroundColor = value;
+                            if (targetClass === 'sd-stage-floor') {
+                                // Floor: chỉ lưu màu nền vào data attribute, canvas sẽ vẽ
+                                target.dataset.floorBg = value;
+                                redrawCanvas(); // vẽ lại có màu nền + grid
+                            } else {
+                                target.style.backgroundImage = 'none';
+                                target.style.backgroundColor = value;
+                            }
                         } else if (type === 'image') {
                             let img = target.querySelector('img');
                             if (!img) {
@@ -771,15 +793,28 @@
                     }
                 }
 
-              
-                const COLS = 6, ROWS = 6;
-                let dragPayload = null;       // lưu data khi drag
-                let hoveredCell = null;       // { col, row } đang hover
+                // ============================================================
+                // HỆ THỐNG MỚI: map chuột 2D → cell 3D qua inverse bilinear
+                // Lý do: CSS pointer-events KHÔNG reliable trong 3D transform chain
+                // (2 perspective lồng + preserve-3d + scale + rotate).
+                // Giải pháp: overlay trong suốt nằm NGOÀI 3D bắt mọi event,
+                // sau đó tính 4 góc sàn trên màn hình bằng getBoundingClientRect
+                // của các corner elements, rồi inverse-bilinear map về (u,v) → col/row.
+                // ============================================================
 
-            
+                const COLS = 6, ROWS = 6;
+                let hoveredCell = null;  // { col, row } đang hover
+                let isDragOver = false; // đang drag đồ vào sàn
+
+                // -- Lấy 4 góc sàn trên màn hình --
+                // Dùng 4 div marker ở 4 góc stageFloor để getClientBoundingRect
                 function getFloorCorners() {
                     const floor = document.getElementById('stageFloor');
                     if (!floor) return null;
+
+                    // Lấy bounding rect của 4 điểm: top-left, top-right, bottom-left, bottom-right
+                    // thông qua element::before trick không được, dùng cách khác:
+                    // Tạo 4 div con tạm, đặt ở 4 góc, lấy getBoundingClientRect
                     const markers = floor.querySelectorAll('.floor-corner-marker');
                     if (markers.length < 4) return null;
 
@@ -791,6 +826,8 @@
                     };
                 }
 
+                // -- Inverse bilinear interpolation --
+                // Cho điểm P trên quadrilateral (tl, tr, bl, br), tính (u, v) trong [0,1]
                 function inverseBilinear(px, py, tl, tr, bl, br) {
                     // Giải hệ phương trình phi tuyến bằng Newton iteration
                     let u = 0.5, v = 0.5;
@@ -824,88 +861,25 @@
                     };
                 }
 
-                // -- Vẽ highlight ô lên canvas --
-                function drawHighlight(col, row, isDragOver) {
-                    const canvas = document.getElementById('floor-highlight-canvas');
-                    const pane = document.getElementById('outerPane');
-                    if (!canvas || !pane) return;
-
-                    const pr = window.devicePixelRatio || 1;
-                    const pw = pane.offsetWidth, ph = pane.offsetHeight;
-                    canvas.width = pw * pr;
-                    canvas.height = ph * pr;
-                    canvas.style.width = pw + 'px';
-                    canvas.style.height = ph + 'px';
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.scale(pr, pr);
-
-                    if (col === null) return;
-
-                    const corners = getFloorCorners();
-                    if (!corners) return;
-
-                    const pr2 = { x: pane.getBoundingClientRect().left, y: pane.getBoundingClientRect().top };
-
-                    // Chuyển corners từ screen coords → canvas coords (relative to pane)
-                    const toLocal = p => ({ x: p.x - pr2.x, y: p.y - pr2.y });
-                    const TL = toLocal(corners.tl);
-                    const TR = toLocal(corners.tr);
-                    const BL = toLocal(corners.bl);
-                    const BR = toLocal(corners.br);
-
-                    // Tính 4 góc của cell (col, row)
-                    const u0 = col / COLS, v0 = row / ROWS;
-                    const u1 = (col + 1) / COLS, v1 = (row + 1) / ROWS;
-
-                    function lerp(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
-                    function bilerp(u, v) {
-                        return lerp(lerp(TL, TR, u), lerp(BL, BR, u), v);
-                    }
-
-                    const p00 = bilerp(u0, v0);
-                    const p10 = bilerp(u1, v0);
-                    const p01 = bilerp(u0, v1);
-                    const p11 = bilerp(u1, v1);
-
-                    ctx.beginPath();
-                    ctx.moveTo(p00.x, p00.y);
-                    ctx.lineTo(p10.x, p10.y);
-                    ctx.lineTo(p11.x, p11.y);
-                    ctx.lineTo(p01.x, p01.y);
-                    ctx.closePath();
-
-                    if (isDragOver) {
-                        ctx.fillStyle = 'rgba(142, 124, 235, 0.45)';
-                        ctx.strokeStyle = '#8E7CEB';
-                        ctx.lineWidth = 2;
-                    } else {
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-                        ctx.strokeStyle = 'rgba(142, 124, 235, 0.7)';
-                        ctx.lineWidth = 1;
-                    }
-                    ctx.fill();
-                    ctx.stroke();
+                // drawHighlight: chỉ set state, redrawAllPlaced lo vẽ tất cả
+                function drawHighlight(col, row, dragOver) {
+                    hoveredCell = (col !== null) ? { col, row } : null;
+                    isDragOver = !!dragOver;
+                    redrawAllPlaced();
                 }
 
                 function clearHighlight() {
-                    const canvas = document.getElementById('floor-highlight-canvas');
-                    if (canvas) {
-                        const ctx = canvas.getContext('2d');
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    }
                     hoveredCell = null;
+                    isDragOver = false;
+                    redrawAllPlaced();
                 }
 
-                // -- Vẽ lại tất cả ô có đồ (màu tím nhạt) --
+                // ─── CANVAS DUY NHẤT: grid + placed + hover ───────────────────
                 function redrawAllPlaced() {
                     const floor = document.getElementById('stageFloor');
-                    if (!floor) return;
-                    const placed = floor.querySelectorAll('.placed-item');
                     const canvas = document.getElementById('floor-highlight-canvas');
                     const pane = document.getElementById('outerPane');
-                    if (!canvas || !pane) return;
+                    if (!canvas || !pane || !floor) return;
 
                     const pr = window.devicePixelRatio || 1;
                     const pw = pane.offsetWidth, ph = pane.offsetHeight;
@@ -916,30 +890,66 @@
 
                     const ctx = canvas.getContext('2d');
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.save();
                     ctx.scale(pr, pr);
 
                     const corners = getFloorCorners();
-                    if (!corners) return;
-                    const pr2 = pane.getBoundingClientRect();
-                    const toLocal = p => ({ x: p.x - pr2.left, y: p.y - pr2.top });
+                    if (!corners) { ctx.restore(); return; }
+
+                    const paneRect = pane.getBoundingClientRect();
+                    const toLocal = p => ({ x: p.x - paneRect.left, y: p.y - paneRect.top });
                     const TL = toLocal(corners.tl), TR = toLocal(corners.tr);
                     const BL = toLocal(corners.bl), BR = toLocal(corners.br);
 
                     function lerp(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
                     function bilerp(u, v) { return lerp(lerp(TL, TR, u), lerp(BL, BR, u), v); }
 
-                    placed.forEach(item => {
-                        const col = parseInt(item.dataset.col);
-                        const row = parseInt(item.dataset.row);
+                    function cellPath(col, row) {
                         const u0 = col / COLS, v0 = row / ROWS, u1 = (col + 1) / COLS, v1 = (row + 1) / ROWS;
-                        const p00 = bilerp(u0, v0), p10 = bilerp(u1, v0), p01 = bilerp(u0, v1), p11 = bilerp(u1, v1);
+                        const p00 = bilerp(u0, v0), p10 = bilerp(u1, v0);
+                        const p11 = bilerp(u1, v1), p01 = bilerp(u0, v1);
                         ctx.beginPath();
                         ctx.moveTo(p00.x, p00.y); ctx.lineTo(p10.x, p10.y);
                         ctx.lineTo(p11.x, p11.y); ctx.lineTo(p01.x, p01.y);
                         ctx.closePath();
-                        ctx.fillStyle = 'rgba(142,124,235,0.2)';
+                    }
+
+                    // 1) Grid lines — cùng tọa độ 4 góc thật, không bao giờ lệch
+                    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+                    ctx.lineWidth = 0.8;
+                    for (let c = 0; c <= COLS; c++) {
+                        const u = c / COLS;
+                        const top = bilerp(u, 0), bot = bilerp(u, 1);
+                        ctx.beginPath(); ctx.moveTo(top.x, top.y); ctx.lineTo(bot.x, bot.y); ctx.stroke();
+                    }
+                    for (let r = 0; r <= ROWS; r++) {
+                        const v = r / ROWS;
+                        const lft = bilerp(0, v), rgt = bilerp(1, v);
+                        ctx.beginPath(); ctx.moveTo(lft.x, lft.y); ctx.lineTo(rgt.x, rgt.y); ctx.stroke();
+                    }
+
+                    // 2) Tô ô đã có đèn
+                    floor.querySelectorAll('.placed-item').forEach(item => {
+                        const col = parseInt(item.dataset.col);
+                        const row = parseInt(item.dataset.row);
+                        if (isNaN(col) || isNaN(row)) return;
+                        cellPath(col, row);
+                        ctx.fillStyle = 'rgba(142,124,235,0.22)';
                         ctx.fill();
                     });
+
+                    // 3) Hover / dragover highlight
+                    if (hoveredCell) {
+                        cellPath(hoveredCell.col, hoveredCell.row);
+                        if (typeof isDragOver !== 'undefined' && isDragOver) {
+                            ctx.fillStyle = 'rgba(142,124,235,0.5)'; ctx.strokeStyle = '#8E7CEB'; ctx.lineWidth = 2;
+                        } else {
+                            ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.strokeStyle = 'rgba(142,124,235,0.85)'; ctx.lineWidth = 1.5;
+                        }
+                        ctx.fill(); ctx.stroke();
+                    }
+
+                    ctx.restore();
                 }
 
                 document.addEventListener('DOMContentLoaded', () => {
@@ -958,6 +968,10 @@
                         floor.appendChild(m);
                     });
 
+                    // Vẽ grid ngay từ đầu (double rAF đảm bảo 3D layout xong)
+                    requestAnimationFrame(() => requestAnimationFrame(redrawAllPlaced));
+                    window.addEventListener('resize', redrawAllPlaced);
+
                     // Mouse hover qua overlay → tính cell → vẽ highlight
                     overlay.addEventListener('mousemove', (e) => {
                         const cell = screenToCell(e.clientX, e.clientY);
@@ -974,18 +988,21 @@
                         e.preventDefault();
                         const cell = screenToCell(e.clientX, e.clientY);
                         if (!cell) return;
-                        drawHighlight(cell.col, cell.row, true);
+                        isDragOver = true;
+                        hoveredCell = cell;
+                        redrawAllPlaced();
                     });
 
-                    overlay.addEventListener('dragleave', (e) => {
+                    overlay.addEventListener('dragleave', () => {
+                        isDragOver = false;
+                        hoveredCell = null;
                         redrawAllPlaced();
-                        // Nếu đang move item từ sàn mà kéo ra ngoài → restore opacity
-                        // (dragend sẽ xử lý tiếp nếu thả ngoài)
                     });
 
                     // Drop trên overlay
                     overlay.addEventListener('drop', (e) => {
                         e.preventDefault();
+                        isDragOver = false;
                         const imgUrl = e.dataTransfer.getData('imgUrl');
                         const type = e.dataTransfer.getData('type');
                         const fromCell = e.dataTransfer.getData('fromCell');
@@ -1032,11 +1049,15 @@
                     itemDiv.style.left = leftPercent + '%';
                     itemDiv.style.top = topPercent + '%';
                     itemDiv.style.opacity = '1';
+
+                    const calculatedZIndex = (row * 10) + (10 - col) + 20;
+                    itemDiv.style.zIndex = calculatedZIndex;
+
                     itemDiv.draggable = true;
                     itemDiv.innerHTML = `
-                        <img src="${imgUrl}" alt="${type || 'Stage Light'}">
-                        <button class="delete-item-btn" onclick="removeSingleItem(this)" title="Xóa">✕</button>
-                    `;
+        <img src="${imgUrl}" alt="${type || 'Stage Light'}">
+        <button class="delete-item-btn" onclick="removeSingleItem(this)" title="Xóa">✕</button>
+    `;
                     itemDiv.addEventListener('dragstart', dragStartPlaced);
                     itemDiv.addEventListener('dragend', (e) => { e.currentTarget.style.opacity = '1'; });
                     floor.appendChild(itemDiv);
